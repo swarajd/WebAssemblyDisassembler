@@ -1,0 +1,1 @@
+wat2wasm example.wat -o example.wasm
