@@ -1,5 +1,4 @@
 import sys
-import os
 
 # parse the file into an array of bytes
 def parseFile(filename):
