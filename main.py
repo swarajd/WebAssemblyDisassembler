@@ -9,6 +9,8 @@ def parseFile(filename):
 # our "main"
 def disassemble(filename):
     binary = parseFile(filename)
+    magic = binary[0:4]
+    version = int.from_bytes(binary[4:7], byteorder='little')
     print(binary)
 
 # code that's only executed if this file itself is run
