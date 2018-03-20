@@ -1,8 +1,9 @@
 import sys
+import os
 
 # parse the file into an array of bytes
 def parseFile(filename):
-    wasmFile = open(filename, "r+")
+    wasmFile = open(filename, "rb")
     binaryArray = bytearray(wasmFile.read())
     return binaryArray
 
