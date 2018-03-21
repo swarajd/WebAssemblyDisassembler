@@ -1,18 +1,6 @@
 import sys
 
-from section import *
-
-from typesection import *
-from importsection import *
-from functionsection import *
-from tablesection import *
-from memorysection import *
-from globalsection import *
-from exportsection import *
-from startsection import *
-from elementsection import *
-from codesection import *
-from datasection import *
+from sectionTypes.section import *
 
 def parseFile(filename):
     """

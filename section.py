@@ -60,3 +60,60 @@ def makeSectionList(inputBytes):
 
     # return the generated sectionList
     return sectionList
+
+
+class CodeSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+
+class DataSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class ElementSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class ExportSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class FunctionSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class GlobalSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class ImportSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class MemorySection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class StartSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class TableSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
+
+class TypeSection(Section):
+    def __init__(self, section):
+        # TODO
+        pass
