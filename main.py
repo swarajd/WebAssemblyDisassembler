@@ -1,6 +1,6 @@
 import sys
 
-from sectionTypes.section import *
+from section import *
 
 def parseFile(filename):
     """
