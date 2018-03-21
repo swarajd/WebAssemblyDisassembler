@@ -1,4 +1,4 @@
 class StartSection:
-    def __init__(self, bytes):
+    def __init__(self, section):
         # TODO
         pass

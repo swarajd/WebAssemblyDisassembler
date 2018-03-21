@@ -1,8 +1,8 @@
 class Section:
     def populate(self, inputBytes):
-        self.sectionCode = int.from_bytes(inputBytes[0:1],byteorder='little', signed=False)
-        self.sectionSize = int.from_bytes(inputBytes[1:2],byteorder='little', signed=False)
-        self.numTypes    = int.from_bytes(inputBytes[2:3],byteorder='little', signed=False)
+        self.sectionCode = int.from_bytes(inputBytes[0:1], byteorder='little', signed=False)
+        self.sectionSize = int.from_bytes(inputBytes[1:2], byteorder='little', signed=False)
+        self.numTypes    = int.from_bytes(inputBytes[2:3], byteorder='little', signed=False)
         self.data        = inputBytes[3:self.sectionSize+2]
         print(vars(self))
         return inputBytes[self.sectionSize+2:] #return remaining bytes
