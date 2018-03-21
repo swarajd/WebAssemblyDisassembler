@@ -8,7 +8,7 @@ class Section:
         return inputBytes[self.sectionSize+2:] #return remaining bytes
 
 def makeSectionList(inputBytes):
-    sectionList = [None]*11
+    sectionList = [None] * 12
     for i in range (0, len(sectionList)):
         if (inputBytes != None):
             section    = Section()
