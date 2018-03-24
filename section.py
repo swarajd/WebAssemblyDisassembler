@@ -111,8 +111,8 @@ class MemorySection(Section):
 
 class StartSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
+        self.index = section.numTypes
+        print('Start function index: {}'.format(self.index))
 
 class TableSection(Section):
     def __init__(self, section):
