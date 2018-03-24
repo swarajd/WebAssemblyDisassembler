@@ -39,4 +39,51 @@ class FuncType:
         self.size = 3 + self.param_count + self.return_count
 
     def to_str(self):
-        return 'form: {}, param count: {}, params: {}, return count: {}, returns: {}'.format(self.form, self.param_count, self.param_types, self.return_count, self.return_type)
+        return 'FuncType: (form: {}, param count: {}, params: {}, return count: {}, returns: {})'.format(self.form, self.param_count, self.param_types, self.return_count, self.return_type)
+
+class TableType:
+    def __init__(self, inputBytes):
+        """
+        Field           Type                Description
+        element_type    elem_type           the type of elements
+        limits          resizable_limits    see ResizableLimits class
+        """
+
+class MemoryType:
+    def __init__(self, inputBytes):
+        """
+        Field   Type                Description
+        limits  resizable_limits    see ResizableLimits class
+        """
+        pass
+
+class GlobalType:
+    def __init__(self, inputBytes):
+        """
+        Field           Type        Description
+        content_type    value_type  type of the value
+        mutability      varuint1    0 if immutable, 1 if mutable
+        """
+        pass
+
+class ResizableLimits:
+    def __init__(self, inputBytes):
+        """
+        A packed tuple that describes the limits of a table or memory:
+
+        Field   Type        Description
+        flags   varuint1    1 if the maximum field is present, 0 otherwise
+        initial varuint32   initial length (in units of table elements or Wasm pages)
+        maximum varuint32?  only present if specified by flags
+        """
+        pass
+
+"""
+A single-byte unsigned integer indicating the kind of definition being imported or defined:
+"""
+EXTERNAL_KIND_TABLE = {
+    0 : 'function',
+    1 : 'table',
+    2 : 'memory',
+    3 : 'global'
+}

@@ -1,4 +1,5 @@
 from type import FuncType
+from entry import ImportEntry
 
 class Section:
     """ This class is a generic class for each section in a .wasm file
@@ -96,8 +97,14 @@ class GlobalSection(Section):
 
 class ImportSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.import_count = section.numTypes
+        self.entries = []
+
+        for i in range(self.import_count):
+            self.entries.append(ImportEntry(inputBytes))
+            inputBytes = inputBytes[self.entries[i].size():]
+            print(self.entries[i].to_str())
 
 class MemorySection(Section):
     def __init__(self, section):
