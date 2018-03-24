@@ -34,8 +34,6 @@ class Section:
         # the rest of the bytes in the current section
         self.data        = inputBytes[3:self.sectionSize+2]
 
-        print(vars(self)) #DEBUG
-
         # return the rest of the bytes to be processed later
         return inputBytes[self.sectionSize+2:]
 

@@ -2,6 +2,22 @@ import sys
 
 from section import *
 
+# The main section thats may be found in a wasm module.
+# The list is in the order of which the sections are found in the module.
+SECTION_CLASSES = [
+    TypeSection,
+    ImportSection,
+    FunctionSection,
+    TableSection,
+    MemorySection,
+    GlobalSection,
+    ExportSection,
+    StartSection,
+    ElementSection,
+    CodeSection,
+    DataSection
+]
+
 def parseFile(filename):
     """
         this method reads the file associated with the filename and returns
@@ -46,20 +62,11 @@ def disassemble(filename):
     # generate the section list from the remaining bytes
     sectionList = makeSectionList(binary[8:])
 
-    # Parse each individual sections
-    typeSection = TypeSection(sectionList[1])
-    importSection = ImportSection(sectionList[2])
-    functionSection = FunctionSection(sectionList[3])
-    tableSection = TableSection(sectionList[4])
-    memorySection = MemorySection(sectionList[5])
-    globalSection = GlobalSection(sectionList[6])
-    exportSection = ExportSection(sectionList[7])
-    startSection = StartSection(sectionList[8])
-    elementSection = ElementSection(sectionList[9])
-    codeSection = CodeSection(sectionList[10])
-    dataSection = DataSection(sectionList[11])
+    for idx, section_class in enumerate(SECTION_CLASSES):
+        if sectionList[idx + 1] is not None:
+            sectionList[idx] = section_class(sectionList[idx + 1])
 
-    print(binary)
+    return sectionList
 
 # code that's only executed if this file itself is run
 if __name__ == '__main__':

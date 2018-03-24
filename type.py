@@ -9,7 +9,6 @@ class FuncType:
         return_count  varuint1    the number of results from the function
         return_type   value_type? the result type of the function (if return_count is 1)
         """
-
         self.form        = int.from_bytes(inputBytes[0:1], byteorder='little', signed=False)
         self.param_count = int.from_bytes(inputBytes[1:2], byteorder='little', signed=False)
 
@@ -26,7 +25,6 @@ class FuncType:
         self.return_type = []
         for i in range(self.return_count):
             self.return_type.append(inputBytes[param_end_index + 1 + i])
-
 
     def size(self):
         """ 
