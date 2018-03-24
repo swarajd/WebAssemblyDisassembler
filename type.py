@@ -33,11 +33,10 @@ class FuncType:
         FuncType has a minimum size of 3 bytes (form, parameter count, and return count)
         The remaining bytes are dependent on the parameter and return count
         """
-
-        self.size = 3 + self.param_count + self.return_count
+        return 3 + self.param_count + self.return_count
 
     def to_str(self):
-        return 'FuncType: (form: {}, param count: {}, params: {}, return count: {}, returns: {})'.format(self.form, self.param_count, self.param_types, self.return_count, self.return_type)
+        return 'FuncType: (size: {}, form: {}, param count: {}, params: {}, return count: {}, returns: {})'.format(str(self.size()), self.form, self.param_count, self.param_types, self.return_count, self.return_type)
 
 class TableType:
     def __init__(self, inputBytes):
