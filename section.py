@@ -1,3 +1,5 @@
+from type import FuncType
+
 class Section:
     """ This class is a generic class for each section in a .wasm file
 
@@ -67,7 +69,6 @@ class CodeSection(Section):
         # TODO
         pass
 
-
 class DataSection(Section):
     def __init__(self, section):
         # TODO
@@ -115,5 +116,11 @@ class TableSection(Section):
 
 class TypeSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.func_count = section.numTypes
+        self.func_types = []
+
+        for i in range(self.func_count):
+            self.func_types.append(FuncType(inputBytes))
+            inputBytes = inputBytes[self.func_types[i].size():]
+            print(self.func_types[i].to_str())
