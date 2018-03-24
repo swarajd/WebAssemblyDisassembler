@@ -15,13 +15,17 @@ class FuncType:
 
         # The index in the byte array of the last value of 'param_types'
         param_end_index = 2 + self.param_count
-        self.param_types = int.from_bytes(inputBytes[2:param_end_index], byteorder='little', signed=False)
+        self.param_types = []
+
+        for i in range(self.param_count):
+            self.param_types.append(inputBytes[2 + i]) 
+
         self.return_count = int.from_bytes(inputBytes[param_end_index:param_end_index + 1], byteorder='little', signed=False)
 
         self.return_type = None
-        if self.return_count > 0:
-            return_end_index = self.return_count + param_end_index + 1
-            self.return_type = int.from_bytes(inputBytes[param_end_index + 1:return_end_index], byteorder='little', signed=False)
+        self.return_type = []
+        for i in range(self.return_count):
+            self.return_type.append(inputBytes[param_end_index + 1 + i])
 
 
     def size(self):
