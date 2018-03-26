@@ -85,9 +85,14 @@ class ExportSection(Section):
 
 class FunctionSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
-
+        inputBytes = section.data
+        # Defining number of functions
+        self.num_functions = section.numTypes
+        # Stores list of indicies into type section
+        self.function_idx = []
+        for i in range(self.num_functions):
+            self.function_idx.append(inputBytes[i])
+                    
 class GlobalSection(Section):
     def __init__(self, section):
         # TODO
