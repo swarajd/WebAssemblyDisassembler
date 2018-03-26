@@ -75,8 +75,13 @@ class DataSection(Section):
 
 class ElementSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.numElemSegs = section.numTypes
+        self.elementSegs = []
+        #Constructs array of type ElementSegment
+        for i in range(self.numElemSegs):
+            self.elementSegs.append(ElementSegment(inputBytes))
+            inputBytes = inputBytes[self.elementSegs[i].size():]
 
 class ExportSection(Section):
     """ This class is a generic class for an export section for wasm
