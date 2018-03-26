@@ -86,7 +86,7 @@ class ExportEntry:
     or, if the kind is Global:
     kindType       global_type     type of the exported global
 
-    kindLen        
+    kindLen        varuint32       length of data dependent on kind type
     """
     def __init__(self, inputBytes):
         # the length of the name is the first byte
@@ -98,7 +98,11 @@ class ExportEntry:
         # the kind is the next byte
         self.kind = EXTERNAL_KIND_TABLE[inputBytes[1 + self.exportNameLen]]
 
-        # parse the kind
+        # kind is one of the values found in EXTERNAL_KIND_TABLE.
+        # Depending on the value of kind, the kind_type maybe an integer(function kind) or an array.
+        # Therefore, the length (kind_len) is dependent on the kind as well.
+        # For function, because it is an integer, it will be a length of 1.
+        # For the remaining kind types, the length is equal to the length of the array.
         if self.kind is 'function':
             self.kindType = inputBytes[1 + self.exportNameLen + 1]
             self.kindLen = 1
