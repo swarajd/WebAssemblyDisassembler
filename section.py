@@ -1,5 +1,5 @@
-from type import FuncType
-from entry import ImportEntry
+from type import *
+from entry import *
 
 class Section:
     """ This class is a generic class for each section in a .wasm file
@@ -79,9 +79,21 @@ class ElementSection(Section):
         pass
 
 class ExportSection(Section):
+    """ This class is a generic class for an export section for wasm
+
+    Attributes:
+        exportCount : int           =  the 'index' for this section
+        entries     : ExportEntry[] =  the size in bytes for this section
+    """
     def __init__(self, section):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.exportCount = section.numTypes
+        self.entries     = []
+        
+        for i in range(self.exportCount):
+            self.entries.append(ExportEntry(inputBytes))
+            inputBytes = inputBytes[self.entries[i].size():]
+            print(self.entries[i].to_str())
 
 class FunctionSection(Section):
     def __init__(self, section):

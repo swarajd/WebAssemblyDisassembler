@@ -1,4 +1,5 @@
 from type import EXTERNAL_KIND_TABLE
+
 class ImportEntry:
     def __init__(self, inputBytes):
         """
@@ -59,3 +60,65 @@ class ImportEntry:
     def to_str(self):
         return 'ImportEntry: (module: {}, field: {}, kind_value: {})'.format(self.module_str, self.field_str, self.kind_type)
 
+class ExportEntry:
+    """
+    field          type            description
+    ---------------------------------------------------------
+    exportNameLen  varuint32       length of module_str in bytes
+    exportNameStr  bytes           export name: valid UTF-8 byte sequence
+    kind           external_kind   the kind of definition being imported
+    funcIndex      varuint32       the index of the exported function
+
+    Followed by, if the kind is Function:
+    kindType       varuint32       type index of the function signature
+
+    or, if the kind is Table:
+    kindType       table_type      type of the exported table
+
+    or, if the kind is Memory:
+    kindType       memory_type     type of the exported memory
+
+    or, if the kind is Global:
+    kindType       global_type     type of the exported global
+
+    kindLen        
+    """
+    def __init__(self, inputBytes):
+        # the length of the name is the first byte
+        self.exportNameLen = inputBytes[0]
+
+        # the name is the next n bytes, where n is the length
+        self.exportNameStr = inputBytes[1:1 + self.exportNameLen].decode('utf-8')
+
+        # the kind is the next byte
+        self.kind = EXTERNAL_KIND_TABLE[inputBytes[1 + self.exportNameLen]]
+
+        # parse the kind
+        if self.kind is 'function':
+            self.kindType = inputBytes[1 + self.exportNameLen + 1]
+            self.kindLen = 1
+
+        elif self.kind is 'table':
+            # TODO: create table type
+            self.kindType = None
+            self.kindLen = 0
+
+        elif self.kind is 'memory':
+            # TODO: create memory type
+            self.kindType = None
+            self.kindLen = 0
+
+        elif self.kind is 'global':
+            # TODO: create global type
+            self.kindType = None
+            self.kindLen = 0
+
+        else:
+            raise ValueError('Invalid kind type')
+
+    def size(self):
+        return 3 + self.exportNameLen + self.kindLen
+
+    def to_str(self):
+        return 'ImportEntry: (export: {}, kind value: {})'.format(self.exportNameStr, self.kindType)
+        
