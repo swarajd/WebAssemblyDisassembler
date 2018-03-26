@@ -104,6 +104,8 @@ class ImportSection(Section):
         self.import_count = section.numTypes
         self.entries = []
 
+        # Iterate and instantiate all `n` import entries
+        # Use the size of the current entry to get the index of the next function type
         for i in range(self.import_count):
             self.entries.append(ImportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
@@ -116,6 +118,8 @@ class MemorySection(Section):
 
 class StartSection(Section):
     def __init__(self, section):
+        # The start section only contains an index variable that represents 
+        # the location of the start function.
         self.index = section.numTypes
         print('Start function index: {}'.format(self.index))
 
@@ -130,6 +134,8 @@ class TypeSection(Section):
         self.func_count = section.numTypes
         self.func_types = []
 
+        # Iterate and instantiate all `n` function types
+        # Use the size of the current function types to get the index of the next function type
         for i in range(self.func_count):
             self.func_types.append(FuncType(inputBytes))
             inputBytes = inputBytes[self.func_types[i].size():]
