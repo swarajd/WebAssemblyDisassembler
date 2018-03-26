@@ -29,8 +29,13 @@ class ImportEntry:
         field_str_index = 2 + self.module_len
         self.field_str = inputBytes[field_str_index:field_str_index + self.field_len].decode('utf-8')
 
+        # kind is one of the values found in EXTERNAL_KIND_TABLE.
+        # Depending on the value of kind, the kind_type maybe an integer(function kind) or an array.
+        # Therefore, the length (kind_len) is dependent on the kind as well.
+        # For function, because it is an integer, it will be a length of 1.
+        # For the remaining kind types, the length is equal to the length of the array.
         self.kind = EXTERNAL_KIND_TABLE[inputBytes[field_str_index + self.field_len]]
-
+    
         if self.kind is 'function':
             self.kind_type = inputBytes[field_str_index + self.field_len + 1]
             self.kind_len = 1
