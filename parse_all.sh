@@ -1,3 +1,4 @@
+#!/bin/sh
 tests=(
     "element"
     "empty"
