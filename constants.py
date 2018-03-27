@@ -1,3 +1,4 @@
+# https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#language-types
 LANGUAGE_TYPES = {
     0x7f : 'i32',
     0x7e : 'i64',
