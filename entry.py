@@ -5,71 +5,68 @@ class ImportEntry:
         """
         field       type            description
         ---------------------------------------------------------
-        module_len  varuint32       length of module_str in bytes
-        module_str  bytes           module name: valid UTF-8 byte sequence
-        field_len   varuint32       length of field_str in bytes
-        field_str   bytes           field name: valid UTF-8 byte sequence
+        moduleLen   varuint32       length of moduleStr in bytes
+        moduleStr   bytes           module name: valid UTF-8 byte sequence
+        fieldLen    varuint32       length of fieldStr in bytes
+        fieldStr    bytes           field name: valid UTF-8 byte sequence
         kind        external_kind   the kind of definition being imported
 
         Followed by, if the kind is Function:
-        kind_type        varuint32       type index of the function signature
+        kindType        varuint32       type index of the function signature
 
         or, if the kind is Table:
-        kind_type        table_type      type of the imported table
+        kindType        table_type      type of the imported table
 
         or, if the kind is Memory:
-        kind_type        memory_type     type of the imported memory
+        kindType        memory_type     type of the imported memory
 
         or, if the kind is Global:
-        kind_type        global_type     type of the imported global
+        kindType        global_type     type of the imported global
         """
-        self.module_len = inputBytes[0]
-        self.module_str = inputBytes[1:1 + self.module_len].decode('utf-8')
+        self.moduleLen = inputBytes[0]
+        self.moduleStr = inputBytes[1:1 + self.moduleLen].decode('utf-8')
 
-        self.field_len = inputBytes[1 + self.module_len]
-        field_str_index = 2 + self.module_len
-        self.field_str = inputBytes[field_str_index:field_str_index + self.field_len].decode('utf-8')
+        self.fieldLen = inputBytes[1 + self.moduleLen]
+        fieldStrIndex = 2 + self.moduleLen
+        self.fieldStr = inputBytes[fieldStrIndex:fieldStrIndex + self.fieldLen].decode('utf-8')
 
         # kind is one of the values found in EXTERNAL_KIND_TABLE.
-        # Depending on the value of kind, the kind_type maybe an integer(function kind) or an array.
-        # Therefore, the length (kind_len) is dependent on the kind as well.
+        # Depending on the value of kind, the kindType maybe an integer(function kind) or an array.
+        # Therefore, the length (kindLen) is dependent on the kind as well.
         # For function, because it is an integer, it will be a length of 1.
         # For the remaining kind types, the length is equal to the length of the array.
-        self.kind = EXTERNAL_KIND_TABLE[inputBytes[field_str_index + self.field_len]]
+        self.kind = EXTERNAL_KIND_TABLE[inputBytes[fieldStrIndex + self.fieldLen]]
     
         if self.kind is 'function':
-            self.kind_type = inputBytes[field_str_index + self.field_len + 1]
-            self.kind_len = 1
+            self.kindType = inputBytes[fieldStrIndex + self.fieldLen + 1]
+            self.kindLen = 1
 
         elif self.kind is 'table':
-            # TODO: create table type
-            self.kind_type = None
-            self.kind_len = 0
+            self.kindType = TableType(inputBytes[fieldStrIndex + self.fieldLen + 1])
+            self.kindLen = kindType.size()
 
         elif self.kind is 'memory':
-            # TODO: create memory type
-            self.kind_type = None
-            self.kind_len = 0
+            self.kindType = MemoryType(inputBytes[fieldStrIndex + self.fieldLen + 1])
+            self.kindLen = kindType.size()
 
         elif self.kind is 'global':
-            # TODO: create global type
-            self.kind_type = None
-            self.kind_len = 0
+            self.kindType = GlobalType(inputBytes[fieldStrIndex + self.fieldLen + 1])
+            self.kindLen = kindType.size()
 
         else:
             raise ValueError('Invalid kind type')
 
     def size(self):
-        return 3 + self.module_len + self.field_len + self.kind_len
+        return 3 + self.moduleLen + self.fieldLen + self.kindLen
 
     def to_str(self):
-        return 'ImportEntry: (module: {}, field: {}, kind_value: {})'.format(self.module_str, self.field_str, self.kind_type)
+        return 'ImportEntry: (module: {}, field: {}, kind_value: {})'.format(self.moduleStr, self.fieldStr, self.kindType)
 
 class ExportEntry:
     """
     field          type            description
     ---------------------------------------------------------
-    exportNameLen  varuint32       length of module_str in bytes
+    exportNameLen  varuint32       length of moduleStr in bytes
     exportNameStr  bytes           export name: valid UTF-8 byte sequence
     kind           external_kind   the kind of definition being imported
     funcIndex      varuint32       the index of the exported function
@@ -99,8 +96,8 @@ class ExportEntry:
         self.kind = EXTERNAL_KIND_TABLE[inputBytes[1 + self.exportNameLen]]
 
         # kind is one of the values found in EXTERNAL_KIND_TABLE.
-        # Depending on the value of kind, the kind_type maybe an integer(function kind) or an array.
-        # Therefore, the length (kind_len) is dependent on the kind as well.
+        # Depending on the value of kind, the kindType maybe an integer(function kind) or an array.
+        # Therefore, the length (kindLen) is dependent on the kind as well.
         # For function, because it is an integer, it will be a length of 1.
         # For the remaining kind types, the length is equal to the length of the array.
         if self.kind is 'function':
