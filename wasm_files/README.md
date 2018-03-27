@@ -2,10 +2,6 @@
 
 ### Section Coverage
 
-
-
-
-
 | Section        | Files           |
 | ------------- | ------------- |
 | Type | factorial, element, import, simple, start, stuff     |

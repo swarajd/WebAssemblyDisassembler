@@ -52,5 +52,48 @@ class TestTypeSection(unittest.TestCase):
             self.assertEqual(func_type.return_count, 1)
             self.assertEqual(func_type.return_type, ['f64'])
 
+    def test_random_num_params(self):
+        section = Section()
+        arr = [0x60]
+
+        # Push the parameter count into the array
+        param_count = randint(1, 20)
+        arr += [param_count]
+
+        # Push 'f64' types into the array
+        for i in range(param_count):
+            arr += [0x7c]
+
+        # Push 1 return type of 'f64'
+        arr += [0x01, 0x7c]
+        section.data = bytearray(arr)
+        section.numTypes = 1
+        section = TypeSection(section)
+
+        # The size of the function type is # of parameters + 4 bytes.
+        # The 4 bytes are param_count, func, return_count, and return_type
+        self.assertEqual(section.func_types[0].size(), 4 + param_count)
+        self.assertEqual(section.func_types[0].form, 'func')
+        self.assertEqual(section.func_types[0].param_count, param_count)
+        for i in range(param_count):
+            self.assertEqual(section.func_types[0].param_types[i], 'f64')
+        self.assertEqual(section.func_types[0].return_count, 1)
+        self.assertEqual(section.func_types[0].return_type, ['f64'])
+
+class TestImportSection(unittest.TestCase):
+
+    def test_one_import(self):
+        section = Section()
+        # The byte array represents the following import statement.
+        # (import "host" "print" (func $host.print_1 (type $t1)))
+        section.data = bytearray([0x04, 0x68, 0x6f, 0x73, 0x74, 0x05, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x00, 0x01])
+        section.numTypes = 1
+        section = ImportSection(section)
+
+        self.assertEqual(section.import_count, 1)
+        self.assertEqual(section.entries[0].moduleStr, 'host')
+        self.assertEqual(section.entries[0].fieldStr, 'print')
+        self.assertEqual(section.entries[0].kindType, 1)
+
 if __name__ == '__main__':
     unittest.main()

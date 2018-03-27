@@ -126,7 +126,6 @@ class ImportSection(Section):
         for i in range(self.import_count):
             self.entries.append(ImportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
-            print(self.entries[i].to_str())
 
 class MemorySection(Section):
     def __init__(self, section):
