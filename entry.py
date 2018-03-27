@@ -126,5 +126,4 @@ class ExportEntry:
         return 3 + self.exportNameLen
 
     def to_str(self):
-        return 'ImportEntry: (export: {}, kind value: {})'.format(self.exportNameStr, self.kindType)
-        
+        return 'ExportEntry: (export: {}, kind value: {})'.format(self.exportNameStr, self.kindType)
