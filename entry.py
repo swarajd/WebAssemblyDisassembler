@@ -123,7 +123,7 @@ class ExportEntry:
             raise ValueError('Invalid kind type')
 
     def size(self):
-        return 3 + self.exportNameLen + self.kindLen
+        return 3 + self.exportNameLen
 
     def to_str(self):
         return 'ImportEntry: (export: {}, kind value: {})'.format(self.exportNameStr, self.kindType)
