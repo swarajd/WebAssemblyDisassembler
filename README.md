@@ -1,10 +1,10 @@
-## WebAssembly Disassembler
+# WebAssembly Disassembler
 
 CS4984 (Software Reverse Engineering) Final Project
 
 
 
-# Testing
+## Testing
 ```
 # section tests
 python tests/sectiontests.py

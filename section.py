@@ -156,4 +156,3 @@ class TypeSection(Section):
         for i in range(self.func_count):
             self.func_types.append(FuncType(inputBytes))
             inputBytes = inputBytes[self.func_types[i].size():]
-            print(self.func_types[i].to_str())
