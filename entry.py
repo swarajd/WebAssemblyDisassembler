@@ -1,4 +1,4 @@
-from type import EXTERNAL_KIND_TABLE
+from constants import *
 
 class ImportEntry:
     def __init__(self, inputBytes):
