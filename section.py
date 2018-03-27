@@ -1,6 +1,6 @@
 from type import *
 from entry import *
-
+from segments import *
 class Section:
     """ This class is a generic class for each section in a .wasm file
 
