@@ -42,9 +42,17 @@ class TableType:
     def __init__(self, inputBytes):
         """
         Field           Type                Description
-        element_type    elem_type           the type of elements
+        elementType     elem_type           the type of elements
         limits          resizable_limits    see ResizableLimits class
         """
+
+        # A varint7 indicating the types of elements in a table. 
+        # In the MVP, only one type is available: anyfunc
+        self.elementType = inputBytes[0]
+        self.limits = ResizableLimits(inputBytes[1:])
+
+    def size(self):
+        return self.limits.size() + 1
 
 class MemoryType:
     def __init__(self, inputBytes):
@@ -52,7 +60,10 @@ class MemoryType:
         Field   Type                Description
         limits  resizable_limits    see ResizableLimits class
         """
-        pass
+        self.limits = ResizableLimits(inputBytes)
+
+    def size(self):
+        return self.limits.size()
 
 class GlobalType:
     def __init__(self, inputBytes):
@@ -61,7 +72,11 @@ class GlobalType:
         content_type    value_type  type of the value
         mutability      varuint1    0 if immutable, 1 if mutable
         """
-        pass
+        self.content_type = inputBytes[0]
+        self.mutability = inputBytes[1]
+
+    def size(self):
+        return 2
 
 class ResizableLimits:
     def __init__(self, inputBytes):
@@ -73,10 +88,17 @@ class ResizableLimits:
         initial varuint32   initial length (in units of table elements or Wasm pages)
         maximum varuint32?  only present if specified by flags
         """
-        pass
+        self.flags = inputBytes[0]
+        self.initial = inputBytes[1]
+        self.initial = None
+        if self.flags == 1:
+            self.initial = inputBytes[2]
 
-
-
+    def size(self):
+        if self.flags == 1:
+            return 3
+        else:
+            return 2
     
 """
 A single-byte unsigned integer indicating the kind of definition being 
