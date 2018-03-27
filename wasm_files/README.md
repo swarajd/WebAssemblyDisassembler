@@ -13,7 +13,7 @@
 | Function |   factorial, element, import, simple, start, stuff       |
 | Table | element, stuff          |
 | Memory |   emptymemorydata, start, stuff       |
-| Global |           |
+| Global |    global       |
 | Export |    factorial, element, import, simple, start, stuff       |
 | Start |     start, stuff      |
 | Element |   element        |
