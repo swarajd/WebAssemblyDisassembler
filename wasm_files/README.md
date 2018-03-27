@@ -6,7 +6,7 @@
 
 
 
-| Tables        | Files           |
+| Section        | Files           |
 | ------------- | ------------- |
 | Type | factorial, element, import, simple, start, stuff     |
 | Import |     import, stuff      |
