@@ -93,6 +93,7 @@ class TestImportSection(unittest.TestCase):
         self.assertEqual(section.import_count, 1)
         self.assertEqual(section.entries[0].moduleStr, 'host')
         self.assertEqual(section.entries[0].fieldStr, 'print')
+        self.assertEqual(section.entries[0].kind, 'function')
         self.assertEqual(section.entries[0].kindType, 1)
 
 if __name__ == '__main__':
