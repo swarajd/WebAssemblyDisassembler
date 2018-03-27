@@ -1,4 +1,7 @@
 import unittest
+import os, sys
+sys.path.append(os.environ['CS4984_PROJECT_PATH'])
+from section import *
 
 # how to write a testcase here: https://docs.python.org/3/library/unittest.html
 
