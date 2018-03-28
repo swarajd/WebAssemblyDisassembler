@@ -1,8 +1,9 @@
 import unittest
 import os, sys
 #dirname = os.path.dirname()
-dirname = os.getcwd()
-dirname = dirname[:-6]
+dirname = os.path.realpath(__file__)
+print(dirname)
+dirname = dirname[:-21]
 sys.path.append(dirname)
 from section import *
 from random import *
