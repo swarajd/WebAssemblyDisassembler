@@ -1,6 +1,9 @@
 import unittest
 import os, sys
-sys.path.append(os.environ['CS4984_PROJECT_PATH'])
+#dirname = os.path.dirname()
+dirname = os.getcwd()
+dirname = dirname[:-6]
+sys.path.append(dirname)
 from section import *
 from random import *
 from constants import *
@@ -14,6 +17,20 @@ class TestFunctionSection(unittest.TestCase):
         #TODO: add test body
         self.assertEqual(1, 1)
         pass
+
+class TestElementSection(unittest.TestCase):
+    def test_one_elem_seg(self):
+        section = Section()
+        section.data = bytearray([0x00, 0x41, 0x00, 0x0b,0x04, 0x00, 0x01, 0x03, 0x04])
+        section.numTypes = 1
+        section = ElementSection(section)
+        self.assertEqual(section.numElemSegs, 1)
+        self.assertEqual(len(section.elementSegs),1)
+        self.assertEqual(section.elementSegs[0].index,0x00)
+        self.assertEqual(section.elementSegs[0].offset, bytearray([0x41,0x00,0x0b])) #TODO is this a byte array?
+        self.assertEqual(section.elementSegs[0].numElems,0x04)
+        self.assertEqual(section.elementSegs[0].elems,[0x00,0x01,0x03,0x04])
+        self.assertEqual(len(section.elementSegs[0].elems),section.elementSegs[0].numElems)
 
 class TestTypeSection(unittest.TestCase):
 
