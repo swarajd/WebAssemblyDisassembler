@@ -2,8 +2,8 @@ import unittest
 import os, sys
 #dirname = os.path.dirname()
 dirname = os.path.realpath(__file__)
+dirname = dirname[:dirname[:dirname.rfind('/')].rfind('/')]
 print(dirname)
-dirname = dirname[:-21]
 sys.path.append(dirname)
 from section import *
 from random import *
@@ -28,7 +28,7 @@ class TestElementSection(unittest.TestCase):
         self.assertEqual(section.numElemSegs, 1)
         self.assertEqual(len(section.elementSegs),1)
         self.assertEqual(section.elementSegs[0].index,0x00)
-        self.assertEqual(section.elementSegs[0].offset, bytearray([0x41,0x00,0x0b])) #TODO is this a byte array?
+        self.assertEqual(section.elementSegs[0].offset, bytearray([0x41,0x00,0x0b]))
         self.assertEqual(section.elementSegs[0].numElems,0x04)
         self.assertEqual(section.elementSegs[0].elems,[0x00,0x01,0x03,0x04])
         self.assertEqual(len(section.elementSegs[0].elems),section.elementSegs[0].numElems)
