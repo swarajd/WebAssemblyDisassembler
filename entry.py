@@ -1,4 +1,5 @@
 from constants import *
+from type import *
 
 class ImportEntry:
     def __init__(self, inputBytes):
@@ -127,3 +128,24 @@ class ExportEntry:
 
     def to_str(self):
         return 'ExportEntry: (export: {}, kind value: {})'.format(self.exportNameStr, self.kindType)
+
+class GlobalEntry:
+    """
+    Each global_variable declares a single global variable of a given type, mutability and with the given initializer.
+
+    Field   Type          Description
+    -----------------------------------------------------
+    type    global_type   type of the variables
+    init    init_expr     the initial value of the global
+
+    NOTE: in the MVP, only immutable global variables can be exported.
+    """
+    def __init__(self, inputBytes):
+        self.type = GlobalType(inputBytes)
+        self.initialExpr = InitExpr(inputBytes[self.type.size():])
+
+    def size(self):
+        return self.type.size() + self.initialExpr.size()
+
+    def to_str(self):
+        return '{}, {}'.format(self.type.to_str(), self.initialExpr.to_str())

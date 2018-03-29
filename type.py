@@ -81,11 +81,14 @@ class GlobalType:
 
         Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#global_type
         """
-        self.content_type = inputBytes[0]
+        self.content_type = LANGUAGE_TYPES[inputBytes[0]]
         self.mutability = inputBytes[1]
 
     def size(self):
         return 2
+
+    def to_str(self):
+        return 'GlobalType: {}, mutability = {}'.format(self.content_type, self.mutability)
 
 class ResizableLimits:
     def __init__(self, inputBytes):
@@ -110,3 +113,35 @@ class ResizableLimits:
             return 3
         else:
             return 2
+
+class InitExpr:
+    """
+    Initializer expressions are evaluated at instantiation time and are currently used to:
+        - define the initial value of global variables
+        - define the offset of a data segment or elements segment
+
+    In the MVP, to keep things simple while still supporting the basic needs of dynamic linking,
+    initializer expressions are restricted to the following nullary operators:
+        - the four constant operators; and
+        - get_global, where the global index must refer to an immutable import.
+
+    Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/Modules.md#initializer-expression
+    """
+    def __init__(self, inputBytes):
+        self.constant = CONSTANTS[inputBytes[0]]
+
+        index = 1
+
+        # Iterate through the expression until the end byte is met.
+        # Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#function-bodies
+        while index < len(inputBytes) and inputBytes[index] != 0x0b:
+            index += 1
+
+        self.literal = int.from_bytes(inputBytes[1:index], byteorder='little', signed=False)
+        self._size = index + 1
+
+    def size(self):
+        return self._size
+
+    def to_str(self):
+        return 'constant: {}, literal: {}'.format(self.constant, self.literal)

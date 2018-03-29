@@ -1,6 +1,7 @@
 from type import *
 from entry import *
 from segments import *
+
 class Section:
     """ This class is a generic class for each section in a .wasm file
 
@@ -112,8 +113,13 @@ class FunctionSection(Section):
                     
 class GlobalSection(Section):
     def __init__(self, section):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.count = section.numTypes
+        self.globals = []
+
+        for i in range(self.count):
+            self.globals.append(GlobalEntry(inputBytes))
+            inputBytes = inputBytes[self.globals[i].size():]
 
 class ImportSection(Section):
     def __init__(self, section):

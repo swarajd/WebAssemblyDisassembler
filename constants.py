@@ -20,3 +20,15 @@ EXTERNAL_KIND_TABLE = {
     2 : 'memory',
     3 : 'global'
 }
+
+"""
+These operators have an immediate operand of their associated type which is produced as their result value.
+All possible values of all types are supported (including NaN values of all possible bit patterns).
+Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#constants-described-here
+"""
+CONSTANTS = {
+    0x41 : 'i32.const',
+    0x42 : 'i64.const',
+    0x43 : 'f32.const',
+    0x44 : 'f64.const',
+}
