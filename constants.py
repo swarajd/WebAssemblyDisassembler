@@ -43,7 +43,7 @@ SECTION_IDS = {
 """
 Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#control-flow-operators-described-here
 """
-CONTROL_FLOW_OPS = {
+OPCODES = {
     0x00 : 'unreachable',
     0x01 : 'nop',
     0x02 : 'block',
@@ -55,41 +55,15 @@ CONTROL_FLOW_OPS = {
     0x0d : 'bf_if',
     0x0e : 'br_table',
     0x0f : 'return'
-}
-
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#call-operators-described-here
-"""
-CALL_OPERATORS = {
     0x10 : 'call',
-    0x11 : 'call_indirect'
-}
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#parametric-operators-described-here
-"""
-PARAMETRIC_OPERATORS = {
+    0x11 : 'call_indirect',
     0x1a : 'drop',
-    0x1b : 'select'
-}
-
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#variable-access-described-here
-"""
-VARIABLE_ACCESS = {
+    0x1b : 'select',
     0x20 : 'get_local',
     0x21 : 'set_local',
     0x22 : 'tee_local',
     0x23 : 'get_global',
-    0x24 : 'set_global'
-}
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#memory-related-operators-described-here
-"""
-MEMORY_RELATED_OPERATORS = {
+    0x24 : 'set_global',
     0x28 : 'i32.load',
     0x29 : 'i64.load',
     0x2a : 'f32.load',
@@ -114,25 +88,11 @@ MEMORY_RELATED_OPERATORS = {
     0x3d : 'i64.store16',
     0x3e : 'i64.store32',
     0x3f : 'current_memory',
-    0x40 : 'grow_memory'
-}
-
-"""
-These operators have an immediate operand of their associated type which is produced as their result value.
-All possible values of all types are supported (including NaN values of all possible bit patterns).
-Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#constants-described-here
-"""
-CONSTANTS = {
+    0x40 : 'grow_memory',
     0x41 : 'i32.const',
     0x42 : 'i64.const',
     0x43 : 'f32.const',
     0x44 : 'f64.const',
-}
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#comparison-operators-described-here
-"""
-COMPARISON_OPERATORS = {
     0x45 : 'i32.eqz',
     0x46 : 'i32.eq',
     0x47 : 'i32.ne',
@@ -166,13 +126,7 @@ COMPARISON_OPERATORS = {
     0x63 : 'f64.lt',
     0x64 : 'f64.gt',
     0x65 : 'f64.le',
-    0x66 : 'f64.ge'
-}
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#numeric-operators-described-here
-"""
-NUMERIC_OPERATORS = {
+    0x66 : 'f64.ge',
     0x67 : 'i32.clz',
     0x68 : 'i32.ctz',
     0x69 : 'i32.popcnt',
@@ -236,14 +190,7 @@ NUMERIC_OPERATORS = {
     0xa3 : 'f64.div',
     0xa4 : 'f64.min',
     0xa5 : 'f64.max',
-    0xa6 : 'f64.copysign'
-}
-
-
-"""
-Source: https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md#conversions-described-here
-"""
-CONVERSIONS = {
+    0xa6 : 'f64.copysign',
     0xa7 : 'i32.wrap/i64',
     0xa8 : 'i32.trunc_s/f32',
     0xa9 : 'i32.trunc_u/f32',
@@ -264,10 +211,7 @@ CONVERSIONS = {
     0xb8 : 'f64.convert_u/i32',
     0xb9 : 'f64.convert_s/i64',
     0xba : 'f64.convert_u/i64',
-    0xbb : 'f64.promote/f32'
-}
-
-REINTERPRETATIONS = {
+    0xbb : 'f64.promote/f32',
     0xbc : 'i32.reinterpret/f32',
     0xbd : 'i64.reinterpret/f64',
     0xbe : 'f32.reinterpret/i32',
