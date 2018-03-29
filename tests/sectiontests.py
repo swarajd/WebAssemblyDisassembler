@@ -33,6 +33,13 @@ class TestElementSection(unittest.TestCase):
         self.assertEqual(section.elementSegs[0].elems,[0x00,0x01,0x03,0x04])
         self.assertEqual(len(section.elementSegs[0].elems),section.elementSegs[0].numElems)
 
+class TestStartSection(unittest.TestCase):
+    def test_start_section(self):
+        section = Section()
+        section.numTypes = 1
+        section = StartSection(section)
+        self.assertEqual(section.index, 1)
+
 class TestTypeSection(unittest.TestCase):
 
     def test_one_func_type(self):

@@ -137,7 +137,6 @@ class StartSection(Section):
         # The start section only contains an index variable that represents 
         # the location of the start function.
         self.index = section.numTypes
-        print('Start function index: {}'.format(self.index))
 
 class TableSection(Section):
     def __init__(self, section):
