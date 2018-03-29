@@ -87,7 +87,6 @@ class CodeSection(Section):
             inputBytes = inputBytes[self.bodies[i].size():]
             print(self.bodies[i].to_str())
 
-
 class DataSection(Section):
     def __init__(self, section, sectionList=None):
         # TODO

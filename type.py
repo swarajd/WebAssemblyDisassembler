@@ -180,10 +180,11 @@ class FunctionBody:
             self.locals.append((count, localType))
 
         # Shift the bytes for easier indexing for remaining bytes.
-        inputBytes = inputBytes[self.localCount * 2]
+        inputBytes = inputBytes[self.localCount * 2:]
         index = 0
-        while index < len(inputByte) and inputBytes[index] != END_OPCODE:
+        while index < len(inputBytes) and inputBytes[index] != END_OPCODE:
             # TODO: use opcode table to decode each byte.
+            index += 1
             pass
 
     def size(self):
