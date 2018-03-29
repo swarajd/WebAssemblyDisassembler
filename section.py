@@ -65,8 +65,28 @@ def makeSectionList(inputBytes):
 
 
 class CodeSection(Section):
-    def __init__(self, section, sectionList):
-        pass
+    """
+    Field   Type            Description
+    -----------------------------------------------------------
+    count   varuint32       count of function bodies to follow
+    bodies  function_body*  sequence of Function Bodies
+    Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#code-section
+    """
+    def __init__(self, section, sectionList=None):
+        self.count = section.numTypes
+        inputBytes = section.data
+        functionSection = sectionList[SECTION_IDS['function']]
+
+        # If the function section is missing, then this is an invalid binary.
+        if functionSection is None:
+            raise ValueError('Missing function section')
+
+        self.bodies = []
+        for i in range(self.count):
+            self.bodies.append(FunctionBody(inputBytes))
+            inputBytes = inputBytes[self.bodies[i].size():]
+            print(self.bodies[i].to_str())
+
 
 class DataSection(Section):
     def __init__(self, section, sectionList=None):

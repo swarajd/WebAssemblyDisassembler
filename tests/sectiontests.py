@@ -125,7 +125,7 @@ class TestGlobalSection(unittest.TestCase):
 
     def test_one_global_var(self):
         section = Section()
-        section.data = bytearray([0x7f, 0x1, 0x41, 0x0, 0xb])
+        section.data = bytearray([0x7f, 0x1, 0x41, 0x0, END_OPCODE])
         section.numTypes = 1
         section = GlobalSection(section)
 

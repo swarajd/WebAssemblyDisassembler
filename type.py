@@ -134,7 +134,7 @@ class InitExpr:
 
         # Iterate through the expression until the end byte is met.
         # Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#function-bodies
-        while index < len(inputBytes) and inputBytes[index] != 0x0b:
+        while index < len(inputBytes) and inputBytes[index] != END_OPCODE:
             index += 1
 
         self.literal = int.from_bytes(inputBytes[1:index], byteorder='little', signed=False)
@@ -145,3 +145,49 @@ class InitExpr:
 
     def to_str(self):
         return 'constant: {}, literal: {}'.format(self.constant, self.literal)
+
+class FunctionBody:
+    """
+    Field       Type            Description
+    ---------------------------------------------------------------------
+    body_size   varuint32       size of function body to follow, in bytes
+    local_count varuint32       number of local entries
+    locals      local_entry*    local variables
+    code        byte*           bytecode of the function
+    end byte    0x0b,           indicating the end of the body
+    
+    Function bodies consist of a sequence of local variable declarations followed by bytecode instructions. 
+    Instructions are encoded as an opcode followed by zero or more immediates as defined by the tables below. 
+    Each function body must end with the end opcode.
+    Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#function-bodies
+    """
+    def __init__(self, inputBytes):
+        self.bodySize = inputBytes[0]
+        self.localCount = inputBytes[1]
+        self.locals = []
+
+        # Shift the bytes by 2 for easier indexing in local variable for loop.
+        inputBytes = inputBytes[2:]
+
+        # Iterate and populate the local variables
+        # Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#local-entry
+        for i in range(self.localCount):
+            count = inputBytes[i * 2]
+            localType = LANGUAGE_TYPE[inputBytes[(i * 2) + 1]]
+
+            # The locals array will be an array of tuples.
+            # The tuple will be in the format of (count, localType).
+            self.locals.append((count, localType))
+
+        # Shift the bytes for easier indexing for remaining bytes.
+        inputBytes = inputBytes[self.localCount * 2]
+        index = 0
+        while index < len(inputByte) and inputBytes[index] != END_OPCODE:
+            # TODO: use opcode table to decode each byte.
+            pass
+
+    def size(self):
+        return 0
+
+    def to_str(self):
+        return ''

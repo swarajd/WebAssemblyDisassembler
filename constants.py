@@ -32,3 +32,22 @@ CONSTANTS = {
     0x43 : 'f32.const',
     0x44 : 'f64.const',
 }
+
+END_OPCODE = 0x0b
+
+"""
+Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#high-level-structure
+"""
+SECTION_IDS = {
+    'type'       : 1,
+    'import'     : 2,
+    'function'   : 3,
+    'table'      : 4,
+    'memory'     : 5,
+    'global'     : 6,
+    'export'     : 7,
+    'start'      : 8,
+    'element'    : 9,
+    'code'       : 10,
+    'data'       : 11
+}
