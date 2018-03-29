@@ -64,7 +64,7 @@ def disassemble(filename):
 
     for idx, section_class in enumerate(SECTION_CLASSES):
         if sectionList[idx + 1] is not None:
-            sectionList[idx] = section_class(sectionList[idx + 1])
+            sectionList[idx] = section_class(sectionList[idx + 1], sectionList)
 
     return sectionList
 

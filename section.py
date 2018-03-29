@@ -65,17 +65,16 @@ def makeSectionList(inputBytes):
 
 
 class CodeSection(Section):
-    def __init__(self, section):
-        # TODO
+    def __init__(self, section, sectionList):
         pass
 
 class DataSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         # TODO
         pass
 
 class ElementSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         self.numElemSegs = section.numTypes
         self.elementSegs = []
@@ -91,7 +90,7 @@ class ExportSection(Section):
         exportCount : int           =  the 'index' for this section
         entries     : ExportEntry[] =  the size in bytes for this section
     """
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         self.exportCount = section.numTypes
         self.entries     = []
@@ -102,7 +101,7 @@ class ExportSection(Section):
             print(self.entries[i].to_str())
 
 class FunctionSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         # Defining number of functions
         self.num_functions = section.numTypes
@@ -112,7 +111,7 @@ class FunctionSection(Section):
             self.function_idx.append(inputBytes[i])
                     
 class GlobalSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         self.count = section.numTypes
         self.globals = []
@@ -122,7 +121,7 @@ class GlobalSection(Section):
             inputBytes = inputBytes[self.globals[i].size():]
 
 class ImportSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         self.import_count = section.numTypes
         self.entries = []
@@ -134,23 +133,23 @@ class ImportSection(Section):
             inputBytes = inputBytes[self.entries[i].size():]
 
 class MemorySection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         # TODO
         pass
 
 class StartSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         # The start section only contains an index variable that represents 
         # the location of the start function.
         self.index = section.numTypes
 
 class TableSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         # TODO
         pass
 
 class TypeSection(Section):
-    def __init__(self, section):
+    def __init__(self, section, sectionList):
         inputBytes = section.data
         self.func_count = section.numTypes
         self.func_types = []
