@@ -162,7 +162,7 @@ class FunctionBody:
     Each function body must end with the end opcode.
     Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#function-bodies
     """
-    def __init__(self, inputBytes):
+    def __init__(self, inputBytes, function_indices):
         self.bodySize = inputBytes[0]
         self.localCount = inputBytes[1]
         self.locals = []
@@ -192,23 +192,40 @@ class FunctionBody:
             elif immediate == 'local_index.varuint32':
                 self.instructions.append((name, inputBytes[index]))
                 index += 1
+            elif immediate == 'value.varint32':
+                # The literal value may contain an extra 0 byte.
+                # Look at the import.wasm file as an example.
+                # The start.wasm file has an example of a varint32 literal without an extra 0 byte.
+                if inputBytes[index + 1] == 0x0:
+                    self.instructions.append((name, numpy.frombuffer(inputBytes[index : index + 2], dtype=numpy.int16)[0]))
+                    index += 2
+                else:
+                    self.instructions.append((name, inputBytes[index]))
+                    index += 1
+
             elif immediate == 'value.uint64':
                 self.instructions.append((name, numpy.frombuffer(inputBytes[index : index + 8], dtype=numpy.float64)[0]))
                 index += 8
             elif immediate == 'block_type':
-                # Source: https://github.com/swarajd/WebAssemblyDisassembler/blob/master/scripts/markdown_to_parse.md#block_type
+                # Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#block-type
                 value = inputBytes[index]
                 if value == 0x40:
                     # -0x40 (i.e., the byte 0x40) indicating a signature with 0 results.
                     value = '0'
-                else:
+                elif value in LANGUAGE_TYPES:
                     # a value_type indicating a signature with a single result
                     value = LANGUAGE_TYPES[value]
+                elif name == 'block':
+                    # begin a sequence of expressions, yielding 0 or 1 values
+                    pass
+
                 self.instructions.append((name, value))
                 index += 1
             elif immediate == 'function_index.varuint32':
                 function_index = inputBytes[index]
-                self.instructions.append((name, function_index))
+                if function_index >= len(function_indices) or function_index < 0:
+                    raise ValueError('Invalid function index: {}, {}'.format(function_index, function_indices))
+                self.instructions.append((name, function_indices[function_index]))
                 index += 1
             else:
                 self.instructions.append((name,))

@@ -83,7 +83,7 @@ class CodeSection(Section):
 
         self.bodies = []
         for i in range(self.count):
-            self.bodies.append(FunctionBody(inputBytes))
+            self.bodies.append(FunctionBody(inputBytes, functionSection.function_idx))
             inputBytes = inputBytes[self.bodies[i].size():]
             print(self.bodies[i].to_str())
 
