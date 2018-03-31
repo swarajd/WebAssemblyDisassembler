@@ -1,3 +1,4 @@
+import numpy
 from constants import *
 
 class FuncType:
@@ -128,7 +129,7 @@ class InitExpr:
     Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/Modules.md#initializer-expression
     """
     def __init__(self, inputBytes):
-        self.constant = CONSTANTS[inputBytes[0]]
+        self.constant = OPCODES[inputBytes[0]]
 
         index = 1
 
@@ -182,10 +183,37 @@ class FunctionBody:
         # Shift the bytes for easier indexing for remaining bytes.
         inputBytes = inputBytes[self.localCount * 2:]
         index = 0
+        self.instructions = []
         while index < len(inputBytes) and inputBytes[index] != END_OPCODE:
-            # TODO: use opcode table to decode each byte.
+            name, immediate = OPCODES[inputBytes[index]]
             index += 1
-            pass
+            if immediate is None:
+                self.instructions.append((name))
+            elif immediate == 'local_index.varuint32':
+                self.instructions.append((name, inputBytes[index]))
+                index += 1
+            elif immediate == 'value.uint64':
+                self.instructions.append((name, numpy.frombuffer(inputBytes[index : index + 8], dtype=numpy.float64)[0]))
+                index += 8
+            elif immediate == 'block_type':
+                # Source: https://github.com/swarajd/WebAssemblyDisassembler/blob/master/scripts/markdown_to_parse.md#block_type
+                value = inputBytes[index]
+                if value == 0x40:
+                    # -0x40 (i.e., the byte 0x40) indicating a signature with 0 results.
+                    value = '0'
+                else:
+                    # a value_type indicating a signature with a single result
+                    value = LANGUAGE_TYPES[value]
+                self.instructions.append((name, value))
+                index += 1
+            elif immediate == 'function_index.varuint32':
+                function_index = inputBytes[index]
+                self.instructions.append((name, function_index))
+                index += 1
+            else:
+                self.instructions.append((name,))
+
+            print(self.instructions[-1])
 
     def size(self):
         return 0
