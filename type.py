@@ -1,5 +1,6 @@
 import numpy
 from constants import *
+from conversions import *
 
 class FuncType:
     def __init__(self, inputBytes):
@@ -197,7 +198,9 @@ class FunctionBody:
                 # Look at the import.wasm file as an example.
                 # The start.wasm file has an example of a varint32 literal without an extra 0 byte.
                 if inputBytes[index + 1] == 0x0:
-                    self.instructions.append((name, numpy.frombuffer(inputBytes[index : index + 2], dtype=numpy.int16)[0]))
+                    byte_string = bytes(inputBytes[index : index+2])
+                    decoded = leb128_to_int(byte_string, True)
+                    self.instructions.append((name, decoded))
                     index += 2
                 else:
                     self.instructions.append((name, inputBytes[index]))
