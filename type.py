@@ -162,7 +162,7 @@ class FunctionBody:
     Each function body must end with the end opcode.
     Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#function-bodies
     """
-    def __init__(self, inputBytes, function_indices):
+    def __init__(self, inputBytes, function_count):
         self.bodySize = inputBytes[0]
         self.localCount = inputBytes[1]
         self.locals = []
@@ -223,9 +223,9 @@ class FunctionBody:
                 index += 1
             elif immediate == 'function_index.varuint32':
                 function_index = inputBytes[index]
-                if function_index >= len(function_indices) or function_index < 0:
-                    raise ValueError('Invalid function index: {}, {}'.format(function_index, function_indices))
-                self.instructions.append((name, function_indices[function_index]))
+                if function_index > function_count:
+                    raise ValueError('Invalid function index: {}'.format(function_index))
+                self.instructions.append((name, function_index))
                 index += 1
             else:
                 self.instructions.append((name,))
