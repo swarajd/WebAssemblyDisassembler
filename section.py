@@ -85,7 +85,6 @@ class CodeSection(Section):
         for i in range(self.count):
             self.bodies.append(FunctionBody(inputBytes, functionSection.function_idx))
             inputBytes = inputBytes[self.bodies[i].size():]
-            print(self.bodies[i].to_str())
 
 class DataSection(Section):
     def __init__(self, section, sectionList=None):

@@ -233,7 +233,7 @@ class FunctionBody:
             print(self.instructions[-1])
 
     def size(self):
-        return 0
+        return self.bodySize + 1
 
     def to_str(self):
         return ''
