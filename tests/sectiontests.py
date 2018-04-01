@@ -3,7 +3,6 @@ import os, sys
 #dirname = os.path.dirname()
 dirname = os.path.realpath(__file__)
 dirname = dirname[:dirname[:dirname.rfind('/')].rfind('/')]
-print(dirname)
 sys.path.append(dirname)
 from section import *
 from random import *
@@ -22,7 +21,7 @@ class TestFunctionSection(unittest.TestCase):
 class TestElementSection(unittest.TestCase):
     def test_one_elem_seg(self):
         section = Section()
-        section.data = bytearray([0x00, 0x41, 0x00, 0x0b,0x04, 0x00, 0x01, 0x03, 0x04])
+        section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x04, 0x00, 0x01, 0x03, 0x04])
         section.numTypes = 1
         section = ElementSection(section)
         self.assertEqual(section.numElemSegs, 1)
@@ -32,6 +31,21 @@ class TestElementSection(unittest.TestCase):
         self.assertEqual(section.elementSegs[0].numElems,0x04)
         self.assertEqual(section.elementSegs[0].elems,[0x00,0x01,0x03,0x04])
         self.assertEqual(len(section.elementSegs[0].elems),section.elementSegs[0].numElems)
+
+class TestDataSection(unittest.TestCase):
+    def test_data_section(self):
+        section = Section()
+        section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x02, 0x68, 0x69])
+        section.numTypes = 1
+        section = DataSection(section)
+        self.assertEqual(section.numDataSegs,1)
+        self.assertEqual(len(section.dataSegs),1)
+        self.assertEqual(section.dataSegs[0].index,0x00)
+        self.assertEqual(section.dataSegs[0].offset, bytearray([0x41,0x00,0x0b]))
+        self.assertEqual(section.dataSegs[0].dataSize,0x02)
+        self.assertEqual(section.dataSegs[0].data ,[0x68,0x69])
+        self.assertEqual(len(section.dataSegs[0].data),section.dataSegs[0].dataSize)
+        
 
 class TestStartSection(unittest.TestCase):
     def test_start_section(self):

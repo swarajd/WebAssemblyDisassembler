@@ -88,9 +88,14 @@ class CodeSection(Section):
 
 class DataSection(Section):
     def __init__(self, section, sectionList=None):
-        # TODO
-        pass
-
+        inputBytes = section.data
+        self.numDataSegs = section.numTypes
+        self.dataSegs = []
+        #Constructs array of type DataSegment
+        for i in range(self.numDataSegs):
+            self.dataSegs.append(DataSegment(inputBytes))
+            inputBytes = inputBytes[self.dataSegs[i].size():]
+        
 class ElementSection(Section):
     def __init__(self, section, sectionList=None):
         inputBytes = section.data
