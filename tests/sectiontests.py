@@ -24,6 +24,7 @@ class TestElementSection(unittest.TestCase):
         section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x04, 0x00, 0x01, 0x03, 0x04])
         section.numTypes = 1
         section = ElementSection(section)
+        self.assertEqual(section.toStr(),"(elem (i32.const 0) $f0 $f1 $f3 $f4)")
         self.assertEqual(section.numElemSegs, 1)
         self.assertEqual(len(section.elementSegs),1)
         self.assertEqual(section.elementSegs[0].index,0x00)
@@ -38,6 +39,7 @@ class TestDataSection(unittest.TestCase):
         section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x02, 0x68, 0x69])
         section.numTypes = 1
         section = DataSection(section)
+        self.assertEqual(section.toStr(), "(memory (data \"hi\"))")
         self.assertEqual(section.numDataSegs,1)
         self.assertEqual(len(section.dataSegs),1)
         self.assertEqual(section.dataSegs[0].index,0x00)

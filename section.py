@@ -95,6 +95,11 @@ class DataSection(Section):
         for i in range(self.numDataSegs):
             self.dataSegs.append(DataSegment(inputBytes))
             inputBytes = inputBytes[self.dataSegs[i].size():]
+            
+    def toStr(self):
+        for i in self.dataSegs:
+            output = f"(memory (data \"{''.join(chr(x) for x in i.data)}\"))"
+        return output
         
 class ElementSection(Section):
     def __init__(self, section, sectionList=None):
@@ -105,6 +110,13 @@ class ElementSection(Section):
         for i in range(self.numElemSegs):
             self.elementSegs.append(ElementSegment(inputBytes))
             inputBytes = inputBytes[self.elementSegs[i].size():]
+    def toStr(self):
+        for i in range(len(self.elementSegs)):
+            output = f"(elem (i32.const {self.elementSegs[i].offset[1]})"
+            for elem in self.elementSegs[i].elems:
+                output += f" $f{elem}"
+            output+=")"
+        return output
 
 class ExportSection(Section):
     """ This class is a generic class for an export section for wasm
