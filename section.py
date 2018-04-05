@@ -211,6 +211,10 @@ class StartSection(Section):
         # The start section only contains an index variable that represents 
         # the location of the start function.
         self.index = section.numTypes
+        sys.stdout.write(self.to_str())
+
+    def to_str(self):
+        return '\t(start {})\n'.format(self.index)
 
 class TableSection(Section):
     def __init__(self, section, sectionList=None):
