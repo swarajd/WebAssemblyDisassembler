@@ -41,7 +41,20 @@ class FuncType:
         return 3 + self.param_count + self.return_count
 
     def to_str(self):
-        return 'FuncType: (size: {}, form: {}, param count: {}, params: {}, return count: {}, returns: {})'.format(str(self.size()), self.form, self.param_count, self.param_types, self.return_count, self.return_type)
+        if len(self.param_types) == 0:
+            params = ''
+        else:
+            params = '(param {})'.format(' '.join(self.param_types))
+
+        if len(self.return_type) == 0:
+            results = ''
+        else:
+            results = '(result {})'.format(' '.join(self.return_type))
+
+        padding = ''
+        if len(self.return_type) > 0 and len(self.return_type) > 0:
+            padding = ' '
+        return '{}{}{}'.format(params, padding, results)
 
 class TableType:
     def __init__(self, inputBytes):
@@ -146,7 +159,7 @@ class InitExpr:
         return self._size
 
     def to_str(self):
-        return 'constant: {}, literal: {}'.format(self.constant, self.literal)
+        return '{} {}'.format(self.constant[0], self.literal)
 
 class FunctionBody:
     """
@@ -207,7 +220,8 @@ class FunctionBody:
                     index += 1
 
             elif immediate == 'value.uint64':
-                self.instructions.append((name, numpy.frombuffer(inputBytes[index : index + 8], dtype=numpy.float64)[0]))
+                literal = numpy.frombuffer(inputBytes[index : index + 8], dtype=numpy.float64)[0]
+                self.instructions.append((name, literal))
                 index += 8
             elif immediate == 'block_type':
                 # Source: https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#block-type
@@ -232,8 +246,6 @@ class FunctionBody:
                 index += 1
             else:
                 self.instructions.append((name,))
-
-            print(self.instructions[-1])
 
     def size(self):
         return self.bodySize + 1

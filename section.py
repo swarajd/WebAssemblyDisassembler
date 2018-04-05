@@ -1,3 +1,4 @@
+import sys
 from type import *
 from entry import *
 from segments import *
@@ -106,16 +107,19 @@ class ElementSection(Section):
         inputBytes = section.data
         self.numElemSegs = section.numTypes
         self.elementSegs = []
-        #Constructs array of type ElementSegment
+        # Constructs array of type ElementSegment
         for i in range(self.numElemSegs):
             self.elementSegs.append(ElementSegment(inputBytes))
             inputBytes = inputBytes[self.elementSegs[i].size():]
-    def toStr(self):
+
+        sys.stdout.write(self.to_str())
+
+    def to_str(self):
         for i in range(len(self.elementSegs)):
-            output = f"(elem (i32.const {self.elementSegs[i].offset[1]})"
+            output = f"\t(elem (i32.const {self.elementSegs[i].offset[1]})"
             for elem in self.elementSegs[i].elems:
                 output += f" $f{elem}"
-            output+=")"
+            output += ")\n"
         return output
 
 class ExportSection(Section):
@@ -133,7 +137,6 @@ class ExportSection(Section):
         for i in range(self.exportCount):
             self.entries.append(ExportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
-            print(self.entries[i].to_str())
 
 class FunctionSection(Section):
     def __init__(self, section, sectionList=None):
@@ -155,6 +158,22 @@ class GlobalSection(Section):
             self.globals.append(GlobalEntry(inputBytes))
             inputBytes = inputBytes[self.globals[i].size():]
 
+        sys.stdout.write(self.to_str())
+
+    def to_str(self):
+        output = ''
+
+        # (global $g0 (mut i32) (i32.const 0))
+        for i in range(self.count):
+            entry = self.globals[i]
+            mutability = ''
+            if entry.type.mutability == 1:
+                mutability = ' (mut {}) '.format(entry.type.content_type)
+            output += '\t(global $g{}{}({}))\n'.format(i, mutability, entry.initial_expr.to_str())
+
+        return output
+
+
 class ImportSection(Section):
     def __init__(self, section, sectionList=None):
         inputBytes = section.data
@@ -166,6 +185,21 @@ class ImportSection(Section):
         for i in range(self.import_count):
             self.entries.append(ImportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
+
+        self.type_section = sectionList[SECTION_IDS['type']]
+        if self.type_section is None:
+            raise ValueError('Missing type section')
+
+        sys.stdout.write(self.to_str())
+
+    def to_str(self):
+        output = ''
+        for i in range(self.import_count):
+            entry = self.entries[i]
+            function_str = self.type_section.func_types[entry.kindType].to_str()
+            output += '\t(import "{}" "{}" (func {}))\n'.format(entry.moduleStr, entry.fieldStr, function_str)
+        return output
+
 
 class MemorySection(Section):
     def __init__(self, section, sectionList=None):

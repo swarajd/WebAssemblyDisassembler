@@ -142,10 +142,10 @@ class GlobalEntry:
     """
     def __init__(self, inputBytes):
         self.type = GlobalType(inputBytes)
-        self.initialExpr = InitExpr(inputBytes[self.type.size():])
+        self.initial_expr = InitExpr(inputBytes[self.type.size():])
 
     def size(self):
-        return self.type.size() + self.initialExpr.size()
+        return self.type.size() + self.initial_expr.size()
 
     def to_str(self):
-        return '{}, {}'.format(self.type.to_str(), self.initialExpr.to_str())
+        return '{}, {}'.format(self.type.to_str(), self.initial_expr.to_str())
