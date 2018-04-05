@@ -148,7 +148,7 @@ class TestGlobalSection(unittest.TestCase):
         self.assertEqual(section.count, 1)
         self.assertEqual(section.globals[0].type.content_type, 'i32')
         self.assertEqual(section.globals[0].type.mutability, 1)
-        self.assertEqual(section.globals[0].initialExpr.constant, 'i32.const')
+        self.assertEqual(section.globals[0].initialExpr.constant[0], 'i32.const')
         self.assertEqual(section.globals[0].initialExpr.literal, 0)
 
 if __name__ == '__main__':
