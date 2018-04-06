@@ -99,8 +99,9 @@ class DataSection(Section):
             inputBytes = inputBytes[self.dataSegs[i].size():]
             
     def toStr(self):
+        output = ''
         for i in self.dataSegs:
-            output = f"(memory (data \"{''.join(chr(x) for x in i.data)}\"))"
+            output += f"(memory (data \"{''.join(chr(x) for x in i.data)}\"))"
         return output
         
 class ElementSection(Section):
