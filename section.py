@@ -142,7 +142,13 @@ class ExportSection(Section):
             inputBytes = inputBytes[self.entries[i].size():]
 
     def to_str(self):
+        output = ''
         for i in range(len(self.exportCount)):
+            entry = self.entries[i]
+            function_str = self.type_section.func_types[entry.kindType].to_str()
+            output += '\t(export "{}" (func {}))\n'.format(entry.exportNameStr, function_str)
+        return output
+
 
 
 class FunctionSection(Section):
