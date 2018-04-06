@@ -35,6 +35,7 @@ def parseFile(filename):
 
     # the binary array obtained from reading the file stream
     binaryArray = bytearray(wasmFile.read())
+    wasmFile.close()
 
     # return the binary array
     return binaryArray
@@ -62,11 +63,16 @@ def disassemble(filename):
     # generate the section list from the remaining bytes
     sectionList = makeSectionList(binary[8:])
 
+    output = ''
     for idx, section_class in enumerate(SECTION_CLASSES):
         if sectionList[idx + 1] is not None:
             sectionList[idx + 1] = section_class(sectionList[idx + 1], sectionList)
 
-    return sectionList
+            # Check if the section class has a to_str method
+            if callable(getattr(sectionList, 'to_str', None)):
+                output += sectionList[idx + 1].to_str()
+
+    return output
 
 # code that's only executed if this file itself is run
 if __name__ == '__main__':

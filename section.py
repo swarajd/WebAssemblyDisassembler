@@ -1,4 +1,3 @@
-import sys
 from type import *
 from entry import *
 from segments import *
@@ -98,7 +97,7 @@ class DataSection(Section):
             self.dataSegs.append(DataSegment(inputBytes))
             inputBytes = inputBytes[self.dataSegs[i].size():]
             
-    def toStr(self):
+    def to_str(self):
         output = ''
         for i in self.dataSegs:
             output += f"(memory (data \"{''.join(chr(x) for x in i.data)}\"))"
@@ -113,8 +112,6 @@ class ElementSection(Section):
         for i in range(self.numElemSegs):
             self.elementSegs.append(ElementSegment(inputBytes))
             inputBytes = inputBytes[self.elementSegs[i].size():]
-
-        sys.stdout.write(self.to_str())
 
     def to_str(self):
         output = ""
@@ -146,8 +143,6 @@ class ExportSection(Section):
         if self.type_section is None:
             raise ValueError('Missing type section')
 
-        sys.stdout.write(self.to_str())
-
     def to_str(self):
         output = ''
         for i in range(self.exportCount):
@@ -176,8 +171,6 @@ class GlobalSection(Section):
         for i in range(self.count):
             self.globals.append(GlobalEntry(inputBytes))
             inputBytes = inputBytes[self.globals[i].size():]
-
-        sys.stdout.write(self.to_str())
 
     def to_str(self):
         output = ''
@@ -209,8 +202,6 @@ class ImportSection(Section):
         if self.type_section is None:
             raise ValueError('Missing type section')
 
-        sys.stdout.write(self.to_str())
-
     def to_str(self):
         output = ''
         for i in range(self.import_count):
@@ -237,7 +228,6 @@ class StartSection(Section):
         # The start section only contains an index variable that represents 
         # the location of the start function.
         self.index = section.numTypes
-        sys.stdout.write(self.to_str())
 
     def to_str(self):
         return '\t(start {})\n'.format(self.index)
