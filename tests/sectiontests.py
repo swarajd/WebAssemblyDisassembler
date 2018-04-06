@@ -124,16 +124,37 @@ class TestTypeSection(unittest.TestCase):
 class TestImportSection(unittest.TestCase):
 
     def test_one_import(self):
-        section = Section()
+        importSection = Section()
         # The byte array represents the following import statement.
-        # (import "host" "print" (func $host.print_1 (type $t1)))
-        section.data = bytearray([0x04, 0x68, 0x6f, 0x73, 0x74, 0x05, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x00, 0x01])
-        section.numTypes = 1
-        section = ImportSection(section)
+        # (import "host" "print" (func $host.print_1 (type $t0)))
+        importSection.data = bytearray([0x04, 0x68, 0x6f, 0x73, 0x74, 0x05, 0x70, 0x72, 0x69, 0x6e, 0x74, 0x00, 0x00])
+        importSection.numTypes = 1
 
-        self.assertEqual(section.import_count, 1)
-        self.assertEqual(section.entries[0].moduleStr, 'host')
-        self.assertEqual(section.entries[0].fieldStr, 'print')
+        typeSection = Section()
+        typeSection.data = bytearray([0x60, 0x01, 0x7d, 0x00])
+        typeSection.numTypes = 1
+
+        typeSection = TypeSection(typeSection)
+
+
+        importSection = ImportSection(importSection, [None, typeSection])
+
+        self.assertEqual(importSection.import_count, 1)
+        self.assertEqual(importSection.entries[0].moduleStr, 'host')
+        self.assertEqual(importSection.entries[0].fieldStr, 'print')
+        self.assertEqual(importSection.entries[0].kind, 'function')
+        self.assertEqual(importSection.entries[0].kindType, 0)
+
+class TestExportSection(unittest.TestCase):
+    def test_one_export(self):
+        section = Section()
+        section.data = bytearray([0x07, 0x00, 0x01, 0x03, 0x61, 0x64, 0x64, 0x00, 0x00])
+        section.numTypes = 1
+        section = ExportSection(section)
+
+        self.assertEqual(section.exportCount, 1)
+        self.assertEqual(section.entries[0].exportNameLen, 3)
+        self.assertEqual(section.entries[0].exportNameStr, 'add')
         self.assertEqual(section.entries[0].kind, 'function')
         self.assertEqual(section.entries[0].kindType, 1)
 

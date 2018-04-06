@@ -2,6 +2,7 @@ import sys
 from type import *
 from entry import *
 from segments import *
+from constants import *
 
 class Section:
     """ This class is a generic class for each section in a .wasm file
@@ -196,6 +197,7 @@ class ImportSection(Section):
         output = ''
         for i in range(self.import_count):
             entry = self.entries[i]
+            print(entry.kindType, len(self.type_section.func_types))
             function_str = self.type_section.func_types[entry.kindType].to_str()
             output += '\t(import "{}" "{}" (func {}))\n'.format(entry.moduleStr, entry.fieldStr, function_str)
         return output
