@@ -71,9 +71,9 @@ def disassemble(filename):
             output += sectionList[idx + 1].to_str()
 
     if len(output) == 0:
-        output = '(module)'
+        output = '(module)\n'
     else:
-        output = '(module\n' + output + ')'
+        output = '(module\n' + output[:-1] + ')\n'
 
     return output
 
