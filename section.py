@@ -197,7 +197,6 @@ class ImportSection(Section):
         output = ''
         for i in range(self.import_count):
             entry = self.entries[i]
-            print(entry.kindType, len(self.type_section.func_types))
             function_str = self.type_section.func_types[entry.kindType].to_str()
             output += '\t(import "{}" "{}" (func {}))\n'.format(entry.moduleStr, entry.fieldStr, function_str)
         return output
