@@ -222,8 +222,15 @@ class ImportSection(Section):
 
 class MemorySection(Section):
     def __init__(self, section, sectionList=None):
-        # TODO
-        pass
+        inputBytes = section.data
+        self.memoryCount = section.numTypes
+        self.entries = []
+
+        for i in range(self.memoryCount):
+            self.entries.append(MemoryType(inputBytes))
+            inputBytes = inputBytes[self.entries[i].size():]
+        
+        
 
 class StartSection(Section):
     def __init__(self, section, sectionList=None):
