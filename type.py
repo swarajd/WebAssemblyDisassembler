@@ -41,19 +41,26 @@ class FuncType:
         return 3 + self.param_count + self.return_count
 
     def to_str(self):
-        if len(self.param_types) == 0:
+        param_len = len(self.param_types)
+        return_len = len(self.return_type)
+
+        if param_len == 0 and return_len == 0:
+            return ''
+
+        if param_len == 0:
             params = ''
         else:
             params = '(param {})'.format(' '.join(self.param_types))
 
-        if len(self.return_type) == 0:
+        if return_len == 0:
             results = ''
         else:
             results = '(result {})'.format(' '.join(self.return_type))
 
         padding = ''
-        if len(self.return_type) > 0 and len(self.return_type) > 0:
+        if param_len > 0 and return_len > 0:
             padding = ' '
+
         return '{}{}{}'.format(params, padding, results)
 
 class TableType:

@@ -266,5 +266,16 @@ class TypeSection(Section):
             self.func_types.append(FuncType(inputBytes))
             inputBytes = inputBytes[self.func_types[i].size():]
 
+
     def to_str(self):
-        return ''
+        output = ''
+
+        for i in range(self.func_count):
+            func_str = self.func_types[i].to_str()
+            if len(func_str) == 0:
+                func_str = '(func)'
+            else:
+                func_str = '(func {})'.format(func_str)
+
+            output += '  (type $t{} {})\n'.format(i, func_str)
+        return output
