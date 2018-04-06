@@ -70,6 +70,11 @@ def disassemble(filename):
 
             output += sectionList[idx + 1].to_str()
 
+    if len(output) == 0:
+        output = '(module)'
+    else:
+        output = '(module\n' + output + ')'
+
     return output
 
 # code that's only executed if this file itself is run
