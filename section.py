@@ -261,8 +261,15 @@ class StartSection(Section):
 
 class TableSection(Section):
     def __init__(self, section, sectionList=None):
-        # TODO
-        pass
+        inputBytes = section.data
+        # Defining number of tables
+        self.numTables = section.numTypes
+        # Stores list of table entries
+        self.tableEntries = []
+        
+        for i in range(self.numTables):
+            self.tableEntries.append(TableType(inputBytes))
+            inputBytes = inputBytes[self.tableEntries[i].size():]
 
     def to_str(self):
         return ''
