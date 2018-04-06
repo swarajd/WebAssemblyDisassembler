@@ -142,12 +142,17 @@ class ExportSection(Section):
             self.entries.append(ExportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
 
+        self.type_section = sectionList[SECTION_IDS['type']]
+        if self.type_section is None:
+            raise ValueError('Missing type section')
+
+        sys.stdout.write(self.to_str())
+
     def to_str(self):
         output = ''
-        for i in range(len(self.exportCount)):
+        for i in range(self.exportCount):
             entry = self.entries[i]
-            function_str = self.type_section.func_types[entry.kindType].to_str()
-            output += '\t(export "{}" (func {}))\n'.format(entry.exportNameStr, function_str)
+            output += '\t(export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
         return output
 
 

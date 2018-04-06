@@ -147,16 +147,24 @@ class TestImportSection(unittest.TestCase):
 
 class TestExportSection(unittest.TestCase):
     def test_one_export(self):
-        section = Section()
-        section.data = bytearray([0x03, 0x61, 0x64, 0x64, 0x00, 0x00])
-        section.numTypes = 1
-        section = ExportSection(section)
+        exportSection = Section()
+        exportSection.data = bytearray([0x03, 0x61, 0x64, 0x64, 0x00, 0x00])
+        exportSection.numTypes = 1
 
-        self.assertEqual(section.exportCount, 1)
-        self.assertEqual(section.entries[0].exportNameLen, 3)
-        self.assertEqual(section.entries[0].exportNameStr, 'add')
-        self.assertEqual(section.entries[0].kind, 'function')
-        self.assertEqual(section.entries[0].kindType, 0)
+        typeSection = Section()
+        typeSection.data = bytearray([0x60, 0x01, 0x7d, 0x00])
+        typeSection.numTypes = 1
+
+        typeSection = TypeSection(typeSection)
+
+
+        exportSection = ExportSection(exportSection, [None, typeSection])
+
+        self.assertEqual(exportSection.exportCount, 1)
+        self.assertEqual(exportSection.entries[0].exportNameLen, 3)
+        self.assertEqual(exportSection.entries[0].exportNameStr, 'add')
+        self.assertEqual(exportSection.entries[0].kind, 'function')
+        self.assertEqual(exportSection.entries[0].kindType, 0)
 
 class TestGlobalSection(unittest.TestCase):
 
