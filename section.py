@@ -87,6 +87,9 @@ class CodeSection(Section):
             self.bodies.append(FunctionBody(inputBytes, self.count))
             inputBytes = inputBytes[self.bodies[i].size():]
 
+    def to_str(self):
+        return ''
+
 class DataSection(Section):
     def __init__(self, section, sectionList=None):
         inputBytes = section.data
@@ -150,8 +153,6 @@ class ExportSection(Section):
             output += '\t(export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
         return output
 
-
-
 class FunctionSection(Section):
     def __init__(self, section, sectionList=None):
         inputBytes = section.data
@@ -161,6 +162,9 @@ class FunctionSection(Section):
         self.function_idx = []
         for i in range(self.num_functions):
             self.function_idx.append(inputBytes[i])
+
+    def to_str(self):
+        return ''
                     
 class GlobalSection(Section):
     def __init__(self, section, sectionList=None):
@@ -220,8 +224,9 @@ class MemorySection(Section):
         for i in range(self.memoryCount):
             self.entries.append(MemoryType(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
-        
-        
+
+    def to_str(self):
+        return ''
 
 class StartSection(Section):
     def __init__(self, section, sectionList=None):
@@ -237,6 +242,9 @@ class TableSection(Section):
         # TODO
         pass
 
+    def to_str(self):
+        return ''
+
 class TypeSection(Section):
     def __init__(self, section, sectionList=None):
         inputBytes = section.data
@@ -248,3 +256,6 @@ class TypeSection(Section):
         for i in range(self.func_count):
             self.func_types.append(FuncType(inputBytes))
             inputBytes = inputBytes[self.func_types[i].size():]
+
+    def to_str(self):
+        return ''

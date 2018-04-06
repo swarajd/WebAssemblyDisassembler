@@ -68,9 +68,7 @@ def disassemble(filename):
         if sectionList[idx + 1] is not None:
             sectionList[idx + 1] = section_class(sectionList[idx + 1], sectionList)
 
-            # Check if the section class has a to_str method
-            if callable(getattr(sectionList, 'to_str', None)):
-                output += sectionList[idx + 1].to_str()
+            output += sectionList[idx + 1].to_str()
 
     return output
 
