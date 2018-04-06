@@ -23,7 +23,7 @@ class TestElementSection(unittest.TestCase):
         section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x04, 0x00, 0x01, 0x03, 0x04])
         section.numTypes = 1
         section = ElementSection(section)
-        self.assertEqual(section.to_str(),"(elem (i32.const 0) $f0 $f1 $f3 $f4)")
+        self.assertEqual(section.to_str(),"  (elem (i32.const 0) $f0 $f1 $f3 $f4)\n")
         self.assertEqual(section.numElemSegs, 1)
         self.assertEqual(len(section.elementSegs),1)
         self.assertEqual(section.elementSegs[0].index,0x00)
@@ -38,7 +38,7 @@ class TestDataSection(unittest.TestCase):
         section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x02, 0x68, 0x69])
         section.numTypes = 1
         section = DataSection(section)
-        self.assertEqual(section.to_str(), "(memory (data \"hi\"))")
+        self.assertEqual(section.to_str(), "  (memory (data \"hi\"))\n")
         self.assertEqual(section.numDataSegs,1)
         self.assertEqual(len(section.dataSegs),1)
         self.assertEqual(section.dataSegs[0].index,0x00)
@@ -176,8 +176,8 @@ class TestGlobalSection(unittest.TestCase):
         self.assertEqual(section.count, 1)
         self.assertEqual(section.globals[0].type.content_type, 'i32')
         self.assertEqual(section.globals[0].type.mutability, 1)
-        self.assertEqual(section.globals[0].initialExpr.constant[0], 'i32.const')
-        self.assertEqual(section.globals[0].initialExpr.literal, 0)
+        self.assertEqual(section.globals[0].initial_expr.constant[0], 'i32.const')
+        self.assertEqual(section.globals[0].initial_expr.literal, 0)
 
 if __name__ == '__main__':
     unittest.main()

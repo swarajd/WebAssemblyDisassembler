@@ -40,7 +40,7 @@ class FuncType:
         """
         return 3 + self.param_count + self.return_count
 
-    def to_str(self):
+    def to_str(self, named_params=False):
         param_len = len(self.param_types)
         return_len = len(self.return_type)
 
@@ -49,6 +49,8 @@ class FuncType:
 
         if param_len == 0:
             params = ''
+        elif named_params:
+            params = ' '.join('(param $p{} {})'.format(i, x) for i, x in enumerate(self.param_types))
         else:
             params = '(param {})'.format(' '.join(self.param_types))
 
@@ -258,4 +260,8 @@ class FunctionBody:
         return self.bodySize + 1
 
     def to_str(self):
-        return ''
+        output = ''
+        for instruction in self.instructions:
+            parsed_instruction = ' '.join([str(value) for value in instruction])
+            output += '    ({})\n'.format(parsed_instruction)
+        return output

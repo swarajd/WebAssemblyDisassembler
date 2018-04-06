@@ -76,11 +76,17 @@ class CodeSection(Section):
     def __init__(self, section, sectionList=None):
         self.count = section.numTypes
         inputBytes = section.data
+        typeSection = sectionList[SECTION_IDS['type']]
         functionSection = sectionList[SECTION_IDS['function']]
 
         # If the function section is missing, then this is an invalid binary.
         if functionSection is None:
             raise ValueError('Missing function section')
+        elif typeSection is None:
+            raise ValueError('Missing type section')
+
+        self.function_sig_idx = functionSection.function_idx
+        self.function_signatures = typeSection.func_types
 
         self.bodies = []
         for i in range(self.count):
@@ -88,7 +94,13 @@ class CodeSection(Section):
             inputBytes = inputBytes[self.bodies[i].size():]
 
     def to_str(self):
-        return ''
+        output = ''
+        for i in range(self.count):
+            sig_idx = self.function_sig_idx[i]
+            signature = self.function_signatures[sig_idx]
+            body = self.bodies[i].to_str()[:-1]
+            output += '  (func $f{} (type $t{}) {}\n{})\n'.format(i, sig_idx, signature.to_str(named_params=True), body)
+        return output
 
 class DataSection(Section):
     def __init__(self, section, sectionList=None):
@@ -103,7 +115,7 @@ class DataSection(Section):
     def to_str(self):
         output = ''
         for i in self.dataSegs:
-            output += f"(memory (data \"{''.join(chr(x) for x in i.data)}\"))"
+            output += f"  (memory (data \"{''.join(chr(x) for x in i.data)}\"))\n"
         return output
         
 class ElementSection(Section):
@@ -150,7 +162,7 @@ class ExportSection(Section):
         output = ''
         for i in range(self.exportCount):
             entry = self.entries[i]
-            output += '  (export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
+            output += '  (export "{}" (func ${}))\n'.format(entry.exportNameStr, entry.exportNameStr)
         return output
 
 class FunctionSection(Section):
