@@ -26,7 +26,6 @@ class DataSegment():
         self.offset = segment[1:4] #i32 initializer
         self.dataSize   = segment[4]   #size of data
         self.data   = [segment[i] for i in range (5, 5+self.dataSize)]
-        
     def size(self):
         '''
         Helper to determine size of an data segment

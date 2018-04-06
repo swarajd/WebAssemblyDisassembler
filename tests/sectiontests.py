@@ -38,7 +38,7 @@ class TestDataSection(unittest.TestCase):
         section.data = bytearray([0x00, 0x41, 0x00, 0x0b, 0x02, 0x68, 0x69])
         section.numTypes = 1
         section = DataSection(section)
-        self.assertEqual(section.to_str(), "  (memory (data \"hi\"))\n")
+        self.assertEqual(section.to_str(), "  (memory $M0 0 0)\n  (data (i32.const 0) \"hi\")\n")
         self.assertEqual(section.numDataSegs,1)
         self.assertEqual(len(section.dataSegs),1)
         self.assertEqual(section.dataSegs[0].index,0x00)

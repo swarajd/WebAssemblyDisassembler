@@ -114,8 +114,9 @@ class DataSection(Section):
             
     def to_str(self):
         output = ''
-        for i in self.dataSegs:
-            output += f"  (memory (data \"{''.join(chr(x) for x in i.data)}\"))\n"
+        for idx,i in enumerate(self.dataSegs):
+            output += f"  (memory $M{idx} {idx} {idx})\n"
+            output += f"  (data ({OPCODES[i.offset[0]][0]} {idx}) \"{''.join(chr(x) for x in i.data)}\")\n"
         return output
         
 class ElementSection(Section):
@@ -130,9 +131,9 @@ class ElementSection(Section):
 
     def to_str(self):
         output = ""
-        for i in range(len(self.elementSegs)):
-            tmpOutput = f"  (elem (i32.const {self.elementSegs[i].offset[1]})"
-            for elem in self.elementSegs[i].elems:
+        for idx,i in enumerate(self.elementSegs):
+            tmpOutput = f"  (elem ({OPCODES[i.offset[0]][0]} {i.offset[1]})"
+            for elem in self.elementSegs[idx].elems:
                 tmpOutput += f" $f{elem}"
             tmpOutput += ")\n"
             output += tmpOutput
