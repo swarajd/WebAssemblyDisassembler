@@ -119,7 +119,7 @@ class ElementSection(Section):
     def to_str(self):
         output = ""
         for i in range(len(self.elementSegs)):
-            tmpOutput = f"\t(elem (i32.const {self.elementSegs[i].offset[1]})"
+            tmpOutput = f"  (elem (i32.const {self.elementSegs[i].offset[1]})"
             for elem in self.elementSegs[i].elems:
                 tmpOutput += f" $f{elem}"
             tmpOutput += ")\n"
@@ -150,7 +150,7 @@ class ExportSection(Section):
         output = ''
         for i in range(self.exportCount):
             entry = self.entries[i]
-            output += '\t(export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
+            output += '  (export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
         return output
 
 class FunctionSection(Section):
@@ -185,7 +185,7 @@ class GlobalSection(Section):
             mutability = ''
             if entry.type.mutability == 1:
                 mutability = ' (mut {}) '.format(entry.type.content_type)
-            output += '\t(global $g{}{}({}))\n'.format(i, mutability, entry.initial_expr.to_str())
+            output += '  (global $g{}{}({}))\n'.format(i, mutability, entry.initial_expr.to_str())
 
         return output
 
@@ -207,11 +207,20 @@ class ImportSection(Section):
             raise ValueError('Missing type section')
 
     def to_str(self):
+        # The function names have to be unique, so keep
+        # a frequency counter for names and append its counter to ensure uniqueness.
+        function_name_table = {}
         output = ''
         for i in range(self.import_count):
             entry = self.entries[i]
-            function_str = self.type_section.func_types[entry.kindType].to_str()
-            output += '\t(import "{}" "{}" (func {}))\n'.format(entry.moduleStr, entry.fieldStr, function_str)
+            function_name = '${}.{}'.format(entry.moduleStr, entry.fieldStr)
+            if entry.fieldStr in function_name_table:
+                function_name_table[entry.fieldStr] += 1
+                function_name += '_{}'.format(function_name_table[entry.fieldStr])
+            else:
+                function_name_table[entry.fieldStr] = 0
+            function_str = '(type $t{})'.format(entry.kindType)
+            output += '  (import "{}" "{}" (func {} {}))\n'.format(entry.moduleStr, entry.fieldStr, function_name, function_str)
         return output
 
 
@@ -235,7 +244,7 @@ class StartSection(Section):
         self.index = section.numTypes
 
     def to_str(self):
-        return '\t(start {})\n'.format(self.index)
+        return '  (start {})\n'.format(self.index)
 
 class TableSection(Section):
     def __init__(self, section, sectionList=None):

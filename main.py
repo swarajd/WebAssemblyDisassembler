@@ -79,5 +79,5 @@ if __name__ == '__main__':
     wasmFileName = sys.argv[1]
 
     # disassemble the file
-    disassemble(wasmFileName)
-
+    results = disassemble(wasmFileName)
+    sys.stdout.write(results)

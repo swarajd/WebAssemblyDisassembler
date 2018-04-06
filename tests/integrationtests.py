@@ -23,7 +23,6 @@ class TestDissassembly(unittest.TestCase):
 
             # The assertion claims that the input and output have equal number of lines
             # and that the differ found no difference, therefore should also contain the same number of lines.
-
             self.assertEqual(len(diff), len(input_data))
             self.assertEqual(len(diff), len(output_data))
             self.assertEqual(len(input_data), len(output_data))
