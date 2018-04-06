@@ -116,11 +116,13 @@ class ElementSection(Section):
         sys.stdout.write(self.to_str())
 
     def to_str(self):
+        output = ""
         for i in range(len(self.elementSegs)):
-            output = f"\t(elem (i32.const {self.elementSegs[i].offset[1]})"
+            tmpOutput = f"\t(elem (i32.const {self.elementSegs[i].offset[1]})"
             for elem in self.elementSegs[i].elems:
-                output += f" $f{elem}"
-            output += ")\n"
+                tmpOutput += f" $f{elem}"
+            tmpOutput += ")\n"
+            output += tmpOutput
         return output
 
 class ExportSection(Section):
@@ -138,6 +140,10 @@ class ExportSection(Section):
         for i in range(self.exportCount):
             self.entries.append(ExportEntry(inputBytes))
             inputBytes = inputBytes[self.entries[i].size():]
+
+    def to_str(self):
+        for i in range(len(self.exportCount)):
+
 
 class FunctionSection(Section):
     def __init__(self, section, sectionList=None):
