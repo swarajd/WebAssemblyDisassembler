@@ -162,7 +162,7 @@ class ExportSection(Section):
         output = ''
         for i in range(self.exportCount):
             entry = self.entries[i]
-            output += '  (export "{}" (func ${}))\n'.format(entry.exportNameStr, entry.exportNameStr)
+            output += '  (export "{}" (func $f{}))\n'.format(entry.exportNameStr, entry.kindType)
         return output
 
 class FunctionSection(Section):
