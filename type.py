@@ -240,13 +240,15 @@ class FunctionBody:
                     value = '0'
                 elif value in LANGUAGE_TYPES:
                     # a value_type indicating a signature with a single result
-                    value = LANGUAGE_TYPES[value]
+                    value = '(result {})'.format(LANGUAGE_TYPES[value])
                 elif name == 'block':
                     # begin a sequence of expressions, yielding 0 or 1 values
                     pass
 
-                self.instructions.append((name, value))
+                self.instructions.append((name, value, True))
                 index += 1
+            elif name == 'else':
+                self.instructions.append((name, '', True))
             elif immediate == 'function_index.varuint32':
                 function_index = inputBytes[index]
                 if function_index > function_count:
@@ -261,7 +263,23 @@ class FunctionBody:
 
     def to_str(self):
         output = ''
+        indent = '  '
+        in_block = False
         for instruction in self.instructions:
-            parsed_instruction = ' '.join([str(value) for value in instruction])
-            output += '    ({})\n'.format(parsed_instruction)
+            if len(instruction) == 3 and instruction[2]:
+                parsed_instruction = ' '.join([str(value) for value in instruction[:2]])
+                in_block = True
+                block_level = 2
+            elif in_block:
+                parsed_instruction = ' '.join([str(value) for value in instruction])
+                block_level = 3
+            else:
+                parsed_instruction = ' '.join([str(value) for value in instruction])
+                block_level = 2
+
+            output += '{}{}\n'.format(indent * block_level, parsed_instruction)
+
+        if in_block:
+            output += '{}end\n'.format(indent * 2)
+
         return output
