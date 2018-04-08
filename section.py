@@ -136,7 +136,7 @@ class ElementSection(Section):
         for idx,i in enumerate(self.elementSegs):
             tmpOutput = f"  (elem ({OPCODES[i.offset[0]][0]} {i.offset[1]})"
             for elem in self.elementSegs[idx].elems:
-                tmpOutput += f" $f{elem}"
+                tmpOutput += f" {elem}"
             tmpOutput += ")\n"
             output += tmpOutput
         return output
