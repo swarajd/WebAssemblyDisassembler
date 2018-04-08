@@ -77,7 +77,8 @@ class TableType:
 
         # A varint7 indicating the types of elements in a table. 
         # In the MVP, only one type is available: anyfunc
-        self.elementType = inputBytes[0]
+        # https://github.com/WebAssembly/website/blob/d7592a9b46729d1a76e72f73624fbe8bd5ad1caa/docs/design/BinaryEncoding.md#elem_type
+        self.elementType = LANGUAGE_TYPES[inputBytes[0]]
         self.limits = ResizableLimits(inputBytes[1:])
 
     def size(self):
@@ -128,9 +129,8 @@ class ResizableLimits:
         """
         self.flags = inputBytes[0]
         self.initial = inputBytes[1]
-        self.initial = None
         if self.flags == 1:
-            self.initial = inputBytes[2]
+            self.maximum = inputBytes[2]
 
     def size(self):
         if self.flags == 1:
@@ -257,6 +257,10 @@ class FunctionBody:
                     raise ValueError('Invalid function index: {}'.format(function_index))
                 self.instructions.append((name, function_index))
                 index += 1
+            elif immediate == 'memory_immediate':
+                # Followed by two values, alignment and offset.
+                index += 2
+                self.instructions.append((name,))
             else:
                 self.instructions.append((name,))
 

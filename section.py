@@ -99,7 +99,10 @@ class CodeSection(Section):
             sig_idx = self.function_sig_idx[i]
             signature = self.function_signatures[sig_idx]
             body = self.bodies[i].to_str()[:-1]
-            output += '  (func (;{};) (type $t{}) {}\n{})\n'.format(sig_idx, sig_idx, signature.to_str(named_params=True), body)
+            if len(body) == 0:
+                output += '  (func (;{};) (type $t{}) {})\n'.format(i, sig_idx, signature.to_str(named_params=True))
+            else:
+                output += '  (func (;{};) (type $t{}) {}\n{})\n'.format(i, sig_idx, signature.to_str(named_params=True), body)
         return output
 
 class DataSection(Section):
@@ -115,7 +118,6 @@ class DataSection(Section):
     def to_str(self):
         output = ''
         for idx,i in enumerate(self.dataSegs):
-            output += f"  (memory $M{idx} {idx} {idx})\n"
             output += f"  (data ({OPCODES[i.offset[0]][0]} {idx}) \"{''.join(chr(x) for x in i.data)}\")\n"
         return output
         
@@ -248,7 +250,15 @@ class MemorySection(Section):
             inputBytes = inputBytes[self.entries[i].size():]
 
     def to_str(self):
-        return ''
+        output = ''
+        for i in range(self.memoryCount):
+            entry = self.entries[i].limits
+            if entry.flags == 1:
+                output += '  (memory (;{};) {} {})\n'.format(i, entry.initial, entry.maximum)
+            else:
+                output += '  (memory (;{};) {})\n'.format(i, entry.initial)
+
+        return output
 
 class StartSection(Section):
     def __init__(self, section, sectionList=None):
@@ -272,7 +282,15 @@ class TableSection(Section):
             inputBytes = inputBytes[self.tableEntries[i].size():]
 
     def to_str(self):
-        return ''
+        # (table (;0;) 0 1 anyfunc)
+        output = ''
+        for i in range(self.numTables):
+            entry = self.tableEntries[i]
+            if entry.limits.flags == 1:
+                output += '  (table (;{};) {} {} {})\n'.format(i, entry.limits.initial, entry.limits.maximum, entry.elementType)
+            else:
+                output += '  (table (;{};) {} {}})\n'.format(i, entry.limits.initial, entry.elementType)
+        return output 
 
 class TypeSection(Section):
     def __init__(self, section, sectionList=None):
