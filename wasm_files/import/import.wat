@@ -1,15 +1,15 @@
 (module
-  (type $t0 (func (param i32)))
-  (type $t1 (func (param i32 i32)))
-  (type $t2 (func (result i32)))
-  (import "host" "print" (func $host.print (type $t0)))
-  (import "host" "print" (func $host.print_1 (type $t1)))
-  (func $test (type $t2) (result i32)
-    (call $host.print
-      (i32.const 100))
-    (call $host.print_1
-      (i32.const 200)
-      (i32.const 300))
-    (return
-      (i32.const 1)))
-  (export "test" (func $test)))
+  (type (;0;) (func (param i32)))
+  (type (;1;) (func (param i32 i32)))
+  (type (;2;) (func (result i32)))
+  (import "host" "print" (func (;0;) (type 0)))
+  (import "host" "print" (func (;1;) (type 1)))
+  (func (;2;) (type 2) (result i32)
+    i32.const 100
+    call 0
+    i32.const 200
+    i32.const 300
+    call 1
+    i32.const 1
+    return)
+  (export "test" (func 2)))

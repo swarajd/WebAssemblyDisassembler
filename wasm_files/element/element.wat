@@ -1,59 +1,59 @@
 (module
-  (type $t0 (func (result i32)))
-  (type $t1 (func (param i32 i32) (result i32)))
-  (type $t2 (func (param i32) (result i32)))
-  (type $t3 (func (param i32 i32 i32) (result i32)))
-  (func $f0 (type $t0) (result i32)
-    (i32.const 0))
-  (func $f1 (type $t0) (result i32)
-    (i32.const 1))
-  (func $f2 (type $t2) (param $p0 i32) (result i32)
-    (call_indirect (type $t0)
-      (get_local $p0)))
-  (func $f3 (type $t1) (param $p0 i32) (param $p1 i32) (result i32)
-    (i32.add
-      (get_local $p0)
-      (get_local $p1)))
-  (func $f4 (type $t1) (param $p0 i32) (param $p1 i32) (result i32)
-    (i32.sub
-      (get_local $p0)
-      (get_local $p1)))
-  (func $f5 (type $t3) (param $p0 i32) (param $p1 i32) (param $p2 i32) (result i32)
-    (call_indirect (type $t1)
-      (get_local $p0)
-      (get_local $p1)
-      (get_local $p2)))
-  (func $test_zero (type $t0) (result i32)
-    (call $f2
-      (i32.const 0)))
-  (func $test_one (type $t0) (result i32)
-    (call $f2
-      (i32.const 1)))
-  (func $test_add (type $t0) (result i32)
-    (call $f5
-      (i32.const 10)
-      (i32.const 4)
-      (i32.const 2)))
-  (func $test_sub (type $t0) (result i32)
-    (call $f5
-      (i32.const 10)
-      (i32.const 4)
-      (i32.const 3)))
-  (func $trap_oob (type $t0) (result i32)
-    (call $f5
-      (i32.const 10)
-      (i32.const 4)
-      (i32.const 4)))
-  (func $trap_sig_mismatch (type $t0) (result i32)
-    (call $f5
-      (i32.const 10)
-      (i32.const 4)
-      (i32.const 0)))
-  (table $T0 4 4 anyfunc)
-  (export "test_zero" (func $test_zero))
-  (export "test_one" (func $test_one))
-  (export "test_add" (func $test_add))
-  (export "test_sub" (func $test_sub))
-  (export "trap_oob" (func $trap_oob))
-  (export "trap_sig_mismatch" (func $trap_sig_mismatch))
-  (elem (i32.const 0) $f0 $f1 $f3 $f4))
+  (type (;0;) (func (result i32)))
+  (type (;1;) (func (param i32 i32) (result i32)))
+  (type (;2;) (func (param i32) (result i32)))
+  (type (;3;) (func (param i32 i32 i32) (result i32)))
+  (func (;0;) (type 0) (result i32)
+    i32.const 0)
+  (func (;1;) (type 0) (result i32)
+    i32.const 1)
+  (func (;2;) (type 2) (param i32) (result i32)
+    get_local 0
+    call_indirect (type 0))
+  (func (;3;) (type 1) (param i32 i32) (result i32)
+    get_local 0
+    get_local 1
+    i32.add)
+  (func (;4;) (type 1) (param i32 i32) (result i32)
+    get_local 0
+    get_local 1
+    i32.sub)
+  (func (;5;) (type 3) (param i32 i32 i32) (result i32)
+    get_local 0
+    get_local 1
+    get_local 2
+    call_indirect (type 1))
+  (func (;6;) (type 0) (result i32)
+    i32.const 0
+    call 2)
+  (func (;7;) (type 0) (result i32)
+    i32.const 1
+    call 2)
+  (func (;8;) (type 0) (result i32)
+    i32.const 10
+    i32.const 4
+    i32.const 2
+    call 5)
+  (func (;9;) (type 0) (result i32)
+    i32.const 10
+    i32.const 4
+    i32.const 3
+    call 5)
+  (func (;10;) (type 0) (result i32)
+    i32.const 10
+    i32.const 4
+    i32.const 4
+    call 5)
+  (func (;11;) (type 0) (result i32)
+    i32.const 10
+    i32.const 4
+    i32.const 0
+    call 5)
+  (table (;0;) 4 4 anyfunc)
+  (export "test_zero" (func 6))
+  (export "test_one" (func 7))
+  (export "test_add" (func 8))
+  (export "test_sub" (func 9))
+  (export "trap_oob" (func 10))
+  (export "trap_sig_mismatch" (func 11))
+  (elem (i32.const 0) 0 1 3 4))
