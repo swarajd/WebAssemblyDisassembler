@@ -99,7 +99,7 @@ class CodeSection(Section):
             sig_idx = self.function_sig_idx[i]
             signature = self.function_signatures[sig_idx]
             body = self.bodies[i].to_str()[:-1]
-            output += '  (func $f{} (type $t{}) {}\n{})\n'.format(i, sig_idx, signature.to_str(named_params=True), body)
+            output += '  (func (;{};) (type $t{}) {}\n{})\n'.format(sig_idx, sig_idx, signature.to_str(named_params=True), body)
         return output
 
 class DataSection(Section):
@@ -163,7 +163,7 @@ class ExportSection(Section):
         output = ''
         for i in range(self.exportCount):
             entry = self.entries[i]
-            output += '  (export "{}" (func $f{}))\n'.format(entry.exportNameStr, entry.kindType)
+            output += '  (export "{}" (func {}))\n'.format(entry.exportNameStr, entry.kindType)
         return output
 
 class FunctionSection(Section):

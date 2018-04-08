@@ -210,7 +210,9 @@ class FunctionBody:
         while index < len(inputBytes) and inputBytes[index] != END_OPCODE:
             name, immediate = OPCODES[inputBytes[index]]
             index += 1
-            if immediate is None:
+            if name == 'nop':
+                pass
+            elif immediate is None:
                 self.instructions.append((name))
             elif immediate == 'local_index.varuint32':
                 self.instructions.append((name, inputBytes[index]))
@@ -219,13 +221,14 @@ class FunctionBody:
                 # The literal value may contain an extra 0 byte.
                 # Look at the import.wasm file as an example.
                 # The start.wasm file has an example of a varint32 literal without an extra 0 byte.
-                if inputBytes[index + 1] == 0x0:
-                    byte_string = bytes(inputBytes[index : index+2])
-                    decoded = leb128_to_int(byte_string, True)
+
+                byte_string = bytes(inputBytes[index : index+2])
+                decoded = leb128_to_int(byte_string, True)
+                if isinstance(decoded, int):
                     self.instructions.append((name, decoded))
                     index += 2
                 else:
-                    self.instructions.append((name, inputBytes[index]))
+                    self.instructions.append((name, decoded[0]))
                     index += 1
 
             elif immediate == 'value.uint64':
@@ -238,12 +241,11 @@ class FunctionBody:
                 if value == 0x40:
                     # -0x40 (i.e., the byte 0x40) indicating a signature with 0 results.
                     value = '0'
+                elif name == 'block':
+                    continue
                 elif value in LANGUAGE_TYPES:
                     # a value_type indicating a signature with a single result
                     value = '(result {})'.format(LANGUAGE_TYPES[value])
-                elif name == 'block':
-                    # begin a sequence of expressions, yielding 0 or 1 values
-                    pass
 
                 self.instructions.append((name, value, True))
                 index += 1

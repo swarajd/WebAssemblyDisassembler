@@ -18,6 +18,10 @@ SECTION_CLASSES = [
     DataSection
 ]
 
+# The order in which each section is translated into text may not be the same ordering
+# in which they appear in the binary format.
+TEXT_SECTION_ORDERING = [ 1, 2, 3, 4, 5, 9, 10, 11, 7 ]
+
 def parseFile(filename):
     """
         this method reads the file associated with the filename and returns
@@ -68,7 +72,10 @@ def disassemble(filename):
         if sectionList[idx + 1] is not None:
             sectionList[idx + 1] = section_class(sectionList[idx + 1], sectionList)
 
-            output += sectionList[idx + 1].to_str()
+
+    for idx in TEXT_SECTION_ORDERING:
+        if sectionList[idx] is not None:
+            output += sectionList[idx].to_str()
 
     if len(output) == 0:
         output = '(module)\n'

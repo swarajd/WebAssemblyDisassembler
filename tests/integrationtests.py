@@ -51,7 +51,5 @@ class TestDissassembly(unittest.TestCase):
         os.remove('assembled.wasm')
         os.remove('disassembled.wat')
 
-
-
 if __name__ == '__main__':
     unittest.main()
