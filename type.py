@@ -251,12 +251,24 @@ class FunctionBody:
                 index += 1
             elif name == 'else':
                 self.instructions.append((name, '', True))
+
+            # call opcode
             elif immediate == 'function_index.varuint32':
                 function_index = inputBytes[index]
                 if function_index > function_count:
                     raise ValueError('Invalid function index: {}'.format(function_index))
                 self.instructions.append((name, function_index))
                 index += 1
+
+            elif name == 'call_indirect':
+                # The call_indirect operator takes a list of function arguments and as the last operand the index into the table.
+                # Its reserved immediate is for future 🦄 use and must be 0 in the MVP.
+                # type_index : varuint32, reserved : varuint1
+                type_index = inputBytes[index]
+                reserved = inputBytes[index + 1]
+
+                index += 2
+                self.instructions.append(('{} (type {})'.format(name, type_index),))
             elif immediate == 'memory_immediate':
                 # Followed by two values, alignment and offset.
                 index += 2

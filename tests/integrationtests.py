@@ -7,9 +7,7 @@ import shlex, subprocess
 
 from main import disassemble
 
-differ = difflib.Differ()
-#files = [ 'element', 'empty', 'emptymemorydata', 'factorial', 'global', 'import', 'simple', 'start', 'stuff' ]
-files = [ 'empty', 'emptymemorydata', 'factorial', 'global', 'import', 'simple', 'start', 'stuff' ]
+files = [ 'element', 'empty', 'emptymemorydata', 'factorial', 'global', 'import', 'simple', 'start', 'stuff' ]
 
 class TestDissassembly(unittest.TestCase):
     def test_all(self):

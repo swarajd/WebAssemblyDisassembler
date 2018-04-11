@@ -20,7 +20,7 @@ SECTION_CLASSES = [
 
 # The order in which each section is translated into text may not be the same ordering
 # in which they appear in the binary format.
-TEXT_SECTION_ORDERING = [ 1, 2, 3, 6, 9, 10, 5, 4, 11, 7, 8 ]
+TEXT_SECTION_ORDERING = [ 1, 2, 3, 6, 10, 5, 4, 11, 7, 9, 8 ]
 
 def parseFile(filename):
     """
